@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fbf6ec">
+<meta name="description" content="OpenChina — торговля Китай–Россия под ключ из Иу: закупка, проверка качества, расчёты (USDT, карта, наличные) и отгрузка партнёрскими линиями — Москва за 15 дней.">
+<title>OpenChina · Торговля Китай—Россия под ключ | Иу</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ tokens ============ */
+:root{
+  --bg:#fbf6ec;
+  --bg2:#f3ecdb;
+  --ink:#1d2433;
+  --muted:rgba(29,36,51,.62);
+  --faint:rgba(29,36,51,.4);
+  --line:rgba(29,36,51,.15);
+  --gold:#b0700d;
+  --gold-soft:#8a5607;
+  --sun:#f1a52e;
+  --sun-soft:#f6ba58;
+  --teal:#0e8a6d;
+  --eo:cubic-bezier(.16,1,.3,1);
+  --ei:cubic-bezier(.7,0,.16,1);
+  --fd:'Unbounded','PingFang SC','Microsoft YaHei',sans-serif;
+  --fb:'Manrope','PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+}
+/* ============ reset ============ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font:400 16px/1.7 var(--fb);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,canvas{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+ul{list-style:none}
+::selection{background:var(--sun);color:#241a06}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* grain texture */
+body::after{
+  content:'';position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.14;mix-blend-mode:multiply;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+}
+
+.wrap{width:min(1240px,100% - 48px);margin-inline:auto}
+.display{font-family:var(--fd)}
+html[lang="zh-CN"] h1,html[lang="zh-CN"] h2{letter-spacing:.02em;font-weight:700}
+
+/* ============ custom cursor ============ */
+#cdot,#cring{position:fixed;top:0;left:0;z-index:200;pointer-events:none;border-radius:50%;display:none}
+#cdot{width:6px;height:6px;background:var(--gold)}
+#cring{width:34px;height:34px;border:1px solid rgba(29,36,51,.4);transition:width .5s var(--eo),height .5s var(--eo),border-color .4s}
+#cring.on{width:58px;height:58px;border-color:var(--gold)}
+@media(pointer:fine){
+  body.cur-on #cring{display:block}
+}
+
+/* ============ nav ============ */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  transition:transform .6s var(--eo),background .4s,border-color .4s;
+  border-bottom:1px solid transparent;
+}
+#nav.scrolled{background:rgba(251,246,236,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
+#nav.hide{transform:translateY(-101%)}
+.nav-inner{
+  width:min(1380px,100% - 48px);margin-inline:auto;
+  height:74px;display:flex;align-items:center;gap:36px;
+}
+.logo{font:700 19px/1 var(--fd);letter-spacing:.1em;display:flex;align-items:center}
+.logo b{color:var(--gold);font-weight:700}
+.logo .mk{width:9px;height:9px;background:var(--sun);box-shadow:6px 6px 0 0 rgba(14,138,109,.85);margin-left:14px;margin-top:-8px}
+.links{display:flex;gap:30px;margin-left:auto}
+.links a{font:500 12.5px/1 var(--fb);letter-spacing:.06em;color:var(--muted);position:relative;padding:6px 0;transition:color .3s}
+.links a::after{content:'';position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--gold);transition:width .45s var(--eo)}
+.links a:hover{color:var(--ink)}
+.links a:hover::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:22px}
+.lang{display:flex;gap:4px}
+.lang button{font:600 11px/1 var(--fd);letter-spacing:.05em;padding:8px 7px;color:var(--faint);position:relative;transition:color .3s}
+.lang button::after{content:'';position:absolute;left:7px;right:7px;bottom:2px;height:2px;background:var(--gold);width:0;transition:width .4s var(--eo)}
+.lang button.act{color:var(--ink)}
+.lang button.act::after{width:calc(100% - 14px)}
+#menu-btn{font:600 11px/1 var(--fd);letter-spacing:.2em;text-transform:uppercase;color:var(--ink);display:none;padding:10px 0 10px 10px}
+#menu-btn .m2{display:none}
+body.menu-open #menu-btn .m1{display:none}
+body.menu-open #menu-btn .m2{display:inline}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:14px;
+  font:600 12px/1 var(--fd);letter-spacing:.16em;text-transform:uppercase;
+  padding:17px 28px;border:1px solid var(--line);border-radius:2px;
+  color:var(--ink);position:relative;
+  transition:background-color .45s var(--eo),color .45s var(--eo),border-color .45s var(--eo),transform .5s var(--eo);
+  white-space:nowrap;
+}
+.btn b{font-weight:600;transition:transform .5s var(--eo)}
+.btn:hover{transform:translateY(-3px)}
+.btn:hover b{transform:translateX(7px)}
+.btn-gold{background:var(--sun);border-color:var(--sun);color:#241a06}
+.btn-gold:hover{background:var(--sun-soft);border-color:var(--sun-soft)}
+.btn-ghost:hover{border-color:var(--ink)}
+.btn-s{padding:13px 20px;font-size:11px}
+
+/* ============ overlay menu ============ */
+#overlay{
+  position:fixed;inset:0;z-index:90;background:#f7f0e1;
+  clip-path:inset(0 0 100% 0);transition:clip-path .7s var(--ei);
+  display:flex;align-items:center;
+}
+body.menu-open #overlay{clip-path:inset(0 0 0% 0)}
+.ov-inner{width:min(680px,100% - 48px);margin-inline:auto}
+.ov-links a{
+  display:flex;align-items:baseline;gap:20px;
+  font:500 clamp(1.5rem,5.5vw,2.6rem)/1.2 var(--fd);
+  padding:20px 0;border-bottom:1px solid var(--line);
+  opacity:0;transform:translateY(34px);
+  transition:opacity .7s var(--eo),transform .8s var(--eo),color .3s;
+}
+.ov-links a:hover{color:var(--gold)}
+.ov-links a i{font:500 11px/1 var(--fd);color:var(--gold);font-style:normal;letter-spacing:.1em}
+body.menu-open .ov-links a{opacity:1;transform:none}
+body.menu-open .ov-links a:nth-child(1){transition-delay:.12s}
+body.menu-open .ov-links a:nth-child(2){transition-delay:.18s}
+body.menu-open .ov-links a:nth-child(3){transition-delay:.24s}
+body.menu-open .ov-links a:nth-child(4){transition-delay:.30s}
+body.menu-open .ov-links a:nth-child(5){transition-delay:.36s}
+body.menu-open .ov-links a:nth-child(6){transition-delay:.42s}
+.ov-foot{margin-top:38px;font:500 12px/1.8 var(--fb);color:var(--muted);letter-spacing:.04em;opacity:0;transition:opacity .8s var(--eo) .5s}
+body.menu-open .ov-foot{opacity:1}
+
+/* ============ hero ============ */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+#fluid{position:absolute;inset:0;width:100%;height:100%}
+.hero-veil{position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(to top,rgba(251,246,236,.94) 0%,rgba(251,246,236,.25) 34%,rgba(251,246,236,0) 60%),
+    linear-gradient(100deg,rgba(251,246,236,.78) 0%,rgba(251,246,236,.28) 44%,rgba(251,246,236,0) 72%);
+}
+.hero.dead{background:
+  radial-gradient(900px 600px at 78% 30%,rgba(241,165,46,.34),transparent 62%),
+  radial-gradient(800px 700px at 24% 76%,rgba(14,138,109,.16),transparent 62%),var(--bg)}
+.hero-inner{position:relative;z-index:2;padding:130px 0 0}
+.kicker{font:600 11px/1 var(--fb);letter-spacing:.32em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:16px;margin-bottom:34px}
+.kicker::before{content:'';width:42px;height:2px;background:var(--sun)}
+.hero h1{font:600 clamp(2.45rem,7.4vw,6.1rem)/1.04 var(--fd);letter-spacing:-.01em;text-wrap:balance}
+.h-line{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.04em}
+.h-line span{display:block;transform:translateY(118%);transition:transform 1.25s var(--eo);transition-delay:var(--d,0s)}
+body.loaded .h-line span{transform:none}
+.h-line .accent{color:var(--gold)}
+.hero-tag{font:500 13px/1 var(--fd);letter-spacing:.18em;color:var(--teal);margin-top:30px;text-transform:uppercase}
+.hero-sub{max-width:560px;color:var(--muted);font-size:16.5px;line-height:1.85;margin-top:22px}
+.hero-ctas{display:flex;gap:16px;margin-top:44px;flex-wrap:wrap}
+.h-fade{opacity:0;transform:translateY(28px);transition:opacity 1s var(--eo),transform 1.15s var(--eo);transition-delay:var(--d,0s)}
+body.loaded .h-fade{opacity:1;transform:none}
+.hero-foot{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:0 0 30px}
+.hf-inner{width:min(1240px,100% - 48px);margin-inline:auto;display:flex;align-items:flex-end;justify-content:space-between}
+.scroll-hint{display:flex;flex-direction:column;align-items:flex-start;gap:12px;font:600 10px/1 var(--fb);letter-spacing:.3em;text-transform:uppercase;color:var(--faint)}
+.s-line{width:1px;height:50px;background:linear-gradient(var(--ink),transparent);animation:pulse 2.6s var(--eo) infinite}
+@keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}
+.coords{font:500 10.5px/1.7 var(--fb);letter-spacing:.22em;color:var(--faint);text-transform:uppercase;text-align:right}
+.rail{position:absolute;right:30px;top:50%;transform:translateY(-50%);z-index:2;
+  writing-mode:vertical-rl;font:600 10px/1 var(--fb);letter-spacing:.42em;color:var(--faint);text-transform:uppercase}
+</style>
+
+<style>
+/* ============ marquee ============ */
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:19px 0;position:relative;background:var(--bg)}
+.mq-track{display:flex;width:max-content;animation:mq 30s linear infinite}
+.mq-track span{font:500 12px/1 var(--fd);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding-right:70px}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ============ sections ============ */
+.sec{position:relative;padding:clamp(92px,11vw,152px) 0;border-top:1px solid var(--line);overflow:hidden;scroll-margin-top:74px}
+.ghost{position:absolute;top:2%;right:-2%;z-index:0;font:700 clamp(11rem,26vw,22rem)/.85 var(--fd);
+  color:transparent;-webkit-text-stroke:1px rgba(29,36,51,.07);pointer-events:none;user-select:none}
+.sec > .wrap{position:relative;z-index:1}
+.sec-head{display:flex;align-items:center;gap:22px;margin-bottom:clamp(46px,6vw,76px)}
+.sec-no{font:600 12px/1 var(--fd);color:var(--gold);letter-spacing:.1em}
+.sec-label{font:600 11px/1 var(--fb);letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.sec-rule{flex:1;height:1px;background:var(--line);transform-origin:left;}
+.sec-title{font:600 clamp(1.8rem,4.4vw,3.3rem)/1.12 var(--fd);letter-spacing:-.01em;max-width:21ch;text-wrap:balance}
+
+/* about */
+.about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(44px,6vw,92px);margin-top:clamp(40px,5vw,64px)}
+.about-grid p{color:var(--muted);font-size:16.5px;line-height:1.9}
+.about-grid p+p{margin-top:22px}
+.about-grid p strong{color:var(--ink);font-weight:600}
+.edge li{display:grid;grid-template-columns:18px 1fr;column-gap:16px;padding:22px 0;border-top:1px solid var(--line)}
+.edge li b,.edge li span{grid-column:2}
+.edge li:last-child{border-bottom:1px solid var(--line)}
+.edge li::before{content:'';width:8px;height:8px;background:var(--sun);margin-top:7px}
+.edge li:nth-child(even)::before{background:var(--teal)}
+.edge b{display:block;font:500 15px/1.4 var(--fd);margin-bottom:6px}
+.edge span{font-size:14px;color:var(--muted);line-height:1.75}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;margin-top:clamp(64px,8vw,100px)}
+.stat{border-top:1px solid var(--line);padding-top:22px}
+.stat-v{display:block;font:600 clamp(2rem,3.8vw,3rem)/1 var(--fd);letter-spacing:-.01em;margin-bottom:12px}
+.stat-l{font:600 11px/1.5 var(--fb);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+/* services */
+.slist{border-bottom:1px solid var(--line);margin-top:clamp(34px,4vw,52px)}
+.srow{display:grid;grid-template-columns:74px 1.05fr 1.15fr 56px;align-items:center;gap:26px;
+  padding:32px 0;border-top:1px solid var(--line);position:relative;transition:background-color .45s var(--eo)}
+.srow:hover{background:rgba(29,36,51,.025)}
+.srow .no{font:600 12px/1 var(--fd);color:var(--gold)}
+.srow h3{font:500 clamp(1.1rem,2vw,1.45rem)/1.3 var(--fd);transition:transform .55s var(--eo)}
+.srow:hover h3{transform:translateX(8px)}
+.srow p{font-size:14.5px;color:var(--muted);line-height:1.75}
+.srow .arr{justify-self:end;font:500 18px/1 var(--fd);color:var(--faint);transition:transform .55s var(--eo),color .4s}
+.srow:hover .arr{transform:translateX(10px);color:var(--gold)}
+
+/* payment */
+.pay-sub{max-width:620px;color:var(--muted);font-size:16px;line-height:1.85;margin:26px 0 60px}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+.pcard{background:var(--bg);padding:clamp(30px,4vw,46px);position:relative;transition:background-color .5s var(--eo)}
+.pcard::before{content:'';position:absolute;top:-1px;left:0;height:2px;width:0;background:var(--gold);transition:width .65s var(--eo)}
+.pcard:hover{background:var(--bg2)}
+.pcard:hover::before{width:100%}
+.pcard .pidx{font:600 12px/1 var(--fd);color:var(--faint);display:block;margin-bottom:26px}
+.pcard h3{font:500 clamp(1.15rem,2vw,1.5rem)/1.3 var(--fd);margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.pcard p{font-size:14.5px;color:var(--muted);line-height:1.8;max-width:42ch}
+.ptag{font:700 9.5px/1 var(--fb);letter-spacing:.2em;text-transform:uppercase;
+  padding:7px 10px 6px;border:1px solid var(--gold);color:var(--gold);border-radius:2px}
+.ptag.soon{border-color:var(--faint);color:var(--muted)}
+.pnote{margin-top:30px;border:1px solid var(--line);padding:24px 28px;display:flex;gap:18px;align-items:flex-start}
+.pnote::before{content:'';flex:0 0 8px;height:8px;background:var(--teal);margin-top:8px}
+.pnote p{font-size:14px;color:var(--muted);line-height:1.8}
+
+/* process */
+.proc{display:grid;grid-template-columns:repeat(4,1fr);gap:46px 30px;margin-top:clamp(40px,5vw,64px)}
+.step{border-top:1px solid var(--line);padding-top:22px;position:relative}
+.step::before{content:'';position:absolute;top:-4px;left:0;width:8px;height:8px;background:var(--sun)}
+.step .pn{font:600 11px/1 var(--fd);color:var(--gold);letter-spacing:.1em}
+.step h4{font:500 15px/1.45 var(--fd);margin:16px 0 12px}
+.step p{font-size:13.5px;color:var(--muted);line-height:1.75}
+
+/* cases */
+.testi{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:clamp(40px,5vw,64px)}
+.tcard{border:1px solid var(--line);border-radius:4px;background:var(--bg2);padding:36px 32px;display:flex;flex-direction:column;gap:26px;
+  transition:border-color .5s var(--eo),transform .6s var(--eo)}
+.tcard:hover{border-color:rgba(29,36,51,.32);transform:translateY(-5px)}
+.tcard .qm{font:700 44px/0.5 Georgia,'Times New Roman',serif;color:var(--gold);height:18px}
+.tcard blockquote{font-size:15.5px;line-height:1.85;color:#313c52}
+.who{display:flex;align-items:center;gap:15px;margin-top:auto}
+.ava{width:44px;height:44px;display:grid;place-items:center;font:600 15px/1 var(--fd);color:#fffdf7;border-radius:2px;
+  background:linear-gradient(135deg,var(--sun),#d8821a)}
+.tcard:nth-child(2) .ava{background:linear-gradient(135deg,#14a583,#0a6e55)}
+.tcard:nth-child(3) .ava{background:linear-gradient(135deg,var(--sun) 0%,var(--teal) 130%)}
+.who b{display:block;font:600 14px/1.3 var(--fb)}
+.who i{display:block;font:500 12px/1.5 var(--fb);font-style:normal;color:var(--muted)}
+.routes{margin-top:clamp(60px,8vw,92px)}
+.routes-cap{font:600 11px/1 var(--fb);letter-spacing:.26em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;display:flex;align-items:center;gap:14px}
+.routes-cap::before{content:'';width:8px;height:8px;background:var(--gold)}
+.rrow{display:grid;grid-template-columns:1.25fr .9fr 1.5fr .75fr;gap:18px;padding:19px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.rrow:first-of-type{border-top:1px solid var(--line)}
+.rhead{font:600 10.5px/1.4 var(--fb);letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.rrow .rt-time{color:var(--ink);font-weight:600}
+.rrow span{color:var(--muted)}
+.rrow .rt-cat{color:var(--ink)}
+
+/* contact */
+#contact{padding-top:0}
+.cta-band{position:relative;overflow:hidden;padding:clamp(96px,13vw,170px) 0;border-bottom:1px solid var(--line)}
+#fluid2{position:absolute;inset:0;width:100%;height:100%}
+.cta-veil{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(251,246,236,.86),rgba(251,246,236,.45) 50%,rgba(251,246,236,.9))}
+.cta-band .wrap{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:26px}
+.cta-band .sec-title{max-width:24ch}
+.cta-band .contact-sub{max-width:520px;color:var(--muted);font-size:16px;line-height:1.85}
+.contact-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:clamp(54px,7vw,100px);padding-top:clamp(70px,9vw,110px)}
+.info-t,.form-t{font:600 11px/1 var(--fb);letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.irow{padding:24px 0;border-top:1px solid var(--line)}
+.irow:last-child{border-bottom:1px solid var(--line)}
+.irow .il{font:600 10.5px/1 var(--fb);letter-spacing:.24em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:12px}
+.irow .iv{font-size:15.5px;line-height:1.7;color:var(--ink)}
+.irow .iv.big{font:500 clamp(1.2rem,2.4vw,1.6rem)/1.3 var(--fd)}
+.irow .iv a{border-bottom:1px solid var(--line);transition:border-color .3s,color .3s}
+.irow .iv a:hover{color:var(--gold);border-color:var(--gold)}
+.form-wrap{position:relative}
+.field{margin-bottom:30px}
+.field label{display:block;font:600 10.5px/1 var(--fb);letter-spacing:.24em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+.field input,.field textarea{
+  width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;
+  padding:10px 0 16px;color:var(--ink);font:500 16px/1.6 var(--fb);
+  transition:border-color .4s var(--eo)}
+.field textarea{resize:vertical;min-height:96px}
+.field input:focus,.field textarea:focus{outline:0;border-color:var(--gold)}
+.field input::placeholder,.field textarea::placeholder{color:var(--faint)}
+.f-err{display:none;color:#bb3a25;font-size:13px;margin:-12px 0 22px}
+.f-err.show{display:block}
+.form-inner{transition:opacity .5s var(--eo),transform .5s var(--eo)}
+.form-wrap.sent .form-inner{opacity:0;transform:translateY(-14px);pointer-events:none}
+.form-ok{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:16px;
+  opacity:0;transform:translateY(18px);pointer-events:none;transition:opacity .7s var(--eo) .15s,transform .8s var(--eo) .15s}
+.form-wrap.sent .form-ok{opacity:1;transform:none;pointer-events:auto}
+.form-ok h3{font:500 clamp(1.3rem,2.6vw,1.8rem)/1.3 var(--fd)}
+.form-ok h3::before{content:'';display:block;width:34px;height:3px;background:var(--sun);margin-bottom:20px}
+.form-ok p{color:var(--muted);font-size:15px;line-height:1.85;max-width:46ch}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:clamp(70px,9vw,100px) 0 36px;position:relative;overflow:hidden}
+.f-word{font:700 clamp(2.6rem,9.5vw,7.6rem)/1 var(--fd);letter-spacing:.02em;
+  color:transparent;-webkit-text-stroke:1px rgba(29,36,51,.2);margin-bottom:clamp(48px,7vw,84px);user-select:none}
+.f-word b{-webkit-text-stroke:1px var(--gold);font-weight:700}
+.sec-alt{background:var(--bg2)}
+.f-grid{display:grid;grid-template-columns:1.6fr 1fr 1.1fr;gap:48px}
+.f-grid .logo{margin-bottom:22px}
+.f-tag{color:var(--muted);font-size:15px;max-width:30ch;line-height:1.8}
+.f-h{font:600 10.5px/1 var(--fb);letter-spacing:.26em;text-transform:uppercase;color:var(--faint);margin-bottom:20px}
+.f-grid ul li{margin-bottom:12px}
+.f-grid ul a{font-size:14px;color:var(--muted);transition:color .3s}
+.f-grid ul a:hover{color:var(--ink)}
+.f-grid address{font-style:normal;font-size:14px;color:var(--muted);line-height:1.9}
+.f-bottom{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:clamp(50px,7vw,80px);padding-top:30px;
+  font:500 12px/1.7 var(--fb);letter-spacing:.06em;color:var(--faint)}
+
+/* ============ tracking ============ */
+.track-bar{display:flex;gap:6px;margin-top:clamp(30px,3.6vw,46px);max-width:680px;border:1px solid var(--line);background:var(--bg);padding:6px;transition:border-color .35s}
+.track-bar:focus-within{border-color:var(--gold)}
+.track-bar input{flex:1;min-width:0;border:0;background:transparent;padding:14px 18px;font:500 15px/1 var(--fb);color:var(--ink);outline:0;letter-spacing:.03em}
+.track-bar input::placeholder{color:var(--faint)}
+[hidden]{display:none!important}
+.track-err{display:none;margin-top:14px;color:#bb3a25;font-size:13px}
+.track-err.show{display:block}
+.tr-res{margin-top:clamp(34px,4vw,52px);border:1px solid var(--line);background:var(--bg);padding:clamp(24px,3.2vw,42px)}
+.tr-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.tr-no-l{display:block;font:600 10.5px/1 var(--fd);letter-spacing:.24em;text-transform:uppercase;color:var(--faint);margin-bottom:9px}
+.tr-no{font:600 clamp(1.25rem,2.2vw,1.65rem)/1 var(--fd);letter-spacing:.04em}
+.chip{font:700 10.5px/1.5 var(--fd);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(176,112,13,.5);padding:9px 14px;background:rgba(241,165,46,.1);max-width:46ch}
+.tr-exc{display:flex;gap:14px;align-items:flex-start;margin-top:24px;border:1px solid rgba(187,58,37,.45);background:rgba(187,58,37,.06);padding:16px 18px;color:#8f2b1a;font:600 13.5px/1.65 var(--fb)}
+.tr-exc-b{flex:0 0 auto;width:22px;height:22px;display:grid;place-items:center;border:1px solid currentColor;font:700 13px/1 var(--fd);margin-top:1px}
+.stepper{list-style:none;display:grid;grid-template-columns:repeat(9,1fr);margin-top:clamp(30px,3.6vw,46px)}
+.tstep{position:relative;padding:24px 10px 0 0}
+.tstep::before{content:'';position:absolute;top:4px;left:0;right:0;height:2px;background:var(--line)}
+.tstep:last-child::before{right:10px}
+.tstep .tdot{position:absolute;top:0;left:0;width:10px;height:10px;background:var(--bg);border:2px solid var(--faint)}
+.tstep span{display:block;font:600 10px/1.5 var(--fb);letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+.tstep.done::before{background:var(--sun)}
+.tstep.done .tdot{background:var(--sun);border-color:var(--sun)}
+.tstep.done span{color:var(--muted)}
+.tstep.cur .tdot{background:var(--ink);border-color:var(--ink);animation:tpulse 1.7s var(--eo) infinite}
+.tstep.cur span{color:var(--ink)}
+@keyframes tpulse{0%,100%{box-shadow:0 0 0 0 rgba(29,36,51,.28)}55%{box-shadow:0 0 0 8px rgba(29,36,51,0)}}
+.tr-upd{margin-top:clamp(28px,3.2vw,40px);font-size:12.5px;color:var(--faint);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.tr-demo{font:700 9px/1 var(--fd);letter-spacing:.16em;text-transform:uppercase;border:1px dashed var(--faint);padding:6px 9px}
+/* ============ flexibility ============ */
+.auds{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:clamp(40px,5vw,64px)}
+.aud{background:var(--bg);padding:clamp(26px,3vw,40px);position:relative}
+.aud::before{content:'';position:absolute;top:0;left:0;height:3px;width:0;background:var(--sun);transition:width .8s var(--eo)}
+.aud.in::before{width:100%}
+.a-no{display:block;font:600 11px/1 var(--fd);letter-spacing:.18em;color:var(--gold);margin-bottom:22px}
+.aud h3{font:500 17.5px/1.35 var(--fd);margin-bottom:12px}
+.aud p{color:var(--muted);font-size:14.5px;line-height:1.75}
+.loy{margin-top:clamp(30px,3.6vw,46px);border:1px solid rgba(176,112,13,.35);background:rgba(241,165,46,.09);padding:clamp(24px,3vw,36px);border-radius:2px}
+.loy b{display:block;font:500 16.5px/1.3 var(--fd);margin-bottom:10px}
+.loy p{color:var(--muted);font-size:14.5px;line-height:1.8;max-width:78ch}
+.pay-fx{margin-top:34px;border-left:3px solid var(--sun);padding:4px 0 4px 22px;font:600 16px/1.65 var(--fb);color:var(--ink);max-width:640px}
+.routes-note{margin-top:18px;font-size:12.5px;line-height:1.7;color:var(--faint);max-width:72ch}
+.sla{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:clamp(36px,4.4vw,56px);padding:clamp(26px,3vw,40px) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.gal-l{margin-top:clamp(46px,5vw,72px);font:600 10.5px/1 var(--fd);letter-spacing:.28em;text-transform:uppercase;color:var(--faint)}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.gph{margin:0}
+.gph-i{aspect-ratio:4/5;border:1px solid var(--line);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(165deg,rgba(241,165,46,.18),rgba(29,36,51,.05) 55%,rgba(251,246,236,0)),#efe7d4 repeating-linear-gradient(115deg,rgba(29,36,51,.045) 0 1px,transparent 1px 9px)}
+.gph-i::before{content:'';position:absolute;inset:10px;border:1px solid rgba(29,36,51,.07);pointer-events:none}
+.gph-i span{font:600 10px/1 var(--fd);letter-spacing:.3em;color:var(--faint)}
+.gph-i img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.88) contrast(1.05)}
+.gph figcaption{margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--muted)}
+.ph-src{display:block;margin-top:3px;font-size:10px;letter-spacing:.05em;color:var(--faint)}
+.ph-src:hover{color:var(--gold)}
+/* ============ reveal & lang fade ============ */
+.reveal{opacity:0;transform:translateY(44px);transition:opacity .95s var(--eo),transform 1.05s var(--eo);transition-delay:var(--d,0s)}
+.reveal.in{opacity:1;transform:none}
+#site{transition:opacity .28s ease,transform .28s ease}
+#site.xfade{opacity:0;transform:translateY(8px)}
+
+/* ============ responsive ============ */
+@media(max-width:1060px){
+  .links{display:none}
+  #menu-btn{display:block}
+  .rail{display:none}
+  .about-grid{grid-template-columns:1fr;gap:54px}
+  .testi{grid-template-columns:1fr;gap:20px}
+  .gal{grid-template-columns:repeat(2,1fr)}
+  .auds{grid-template-columns:1fr}
+  .stepper{grid-template-columns:1fr}
+  .tstep{padding:0 0 24px 30px}
+  .tstep::before{top:10px;bottom:-2px;left:4px;right:auto;width:2px;height:auto}
+  .tstep:last-child{padding-bottom:0}
+  .tstep:last-child::before{display:none}
+  .tstep .tdot{top:1px}
+  .contact-grid{grid-template-columns:1fr;gap:64px}
+  .proc{grid-template-columns:repeat(2,1fr);gap:38px 26px}
+  .ghost{font-size:clamp(8rem,30vw,14rem)}
+}
+@media(max-width:820px){
+  .pgrid{grid-template-columns:1fr}
+  .srow{grid-template-columns:48px 1fr 34px;row-gap:10px}
+  .srow p{grid-column:2}
+  .stats{grid-template-columns:repeat(2,1fr);gap:42px 26px}
+  .f-grid{grid-template-columns:1fr;gap:42px}
+}
+@media(max-width:640px){
+  #nav .btn{display:none}
+  .nav-inner{height:66px;gap:18px;width:calc(100% - 40px)}
+  .nav-right{gap:10px}
+  .lang{gap:0}
+  .lang button{padding:8px 5px}
+  #menu-btn{letter-spacing:.12em;padding-left:6px}
+  .track-bar{flex-direction:column;padding:8px}
+  .track-bar .btn{justify-content:center}
+  .logo{font-size:15.5px}
+  .sec{scroll-margin-top:66px}
+  .proc{grid-template-columns:1fr}
+  .sla{grid-template-columns:1fr;gap:20px}
+  .gal{gap:10px}
+  .rhead{display:none}
+  .rrow{grid-template-columns:1fr 1fr;row-gap:8px;padding:22px 0}
+  .hero-sub{font-size:15.5px}
+  .hf-inner .coords{display:none}
+}
+
+/* ============ reduced motion ============ */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001s !important;transition-duration:.001s !important}
+  .reveal,.h-fade{opacity:1;transform:none}
+  .h-line span{transform:none}
+}
+</style>
+</head>
+<body>
+
+<div id="cdot"></div><div id="cring"></div>
+
+<div id="site">
+<header id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="#top" aria-label="OpenChina">OPEN<b>CHINA</b><span class="mk"></span></a>
+    <nav class="links" aria-label="primary">
+      <a href="#about" data-i18n="nav_about">О нас</a>
+      <a href="#services" data-i18n="nav_services">Услуги</a>
+      <a href="#payment" data-i18n="nav_payment">Оплата</a>
+      <a href="#track" data-i18n="nav_track">Трекинг</a>
+      <a href="#flex" data-i18n="nav_flex">Гибкость</a>
+      <a href="#cases" data-i18n="nav_cases">Кейсы</a>
+      <a href="#contact" data-i18n="nav_contact">Контакты</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang" role="group" aria-label="language">
+        <button data-lang="zh">中</button>
+        <button data-lang="ru">RU</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <a href="#form" class="btn btn-gold btn-s magnetic"><span data-i18n="nav_cta">Оставить заявку</span></a>
+      <button id="menu-btn" aria-label="menu"><span class="m1" data-i18n="menu">Меню</span><span class="m2" data-i18n="close">Закрыть</span></button>
+    </div>
+  </div>
+</header>
+
+<div id="overlay" aria-hidden="true">
+  <div class="ov-inner">
+    <nav class="ov-links">
+      <a href="#about"><i>01</i><span data-i18n="nav_about">О нас</span></a>
+      <a href="#services"><i>02</i><span data-i18n="nav_services">Услуги</span></a>
+      <a href="#payment"><i>03</i><span data-i18n="nav_payment">Оплата</span></a>
+      <a href="#process"><i>04</i><span data-i18n="proc_label">Процесс поставки</span></a>
+      <a href="#track"><i>05</i><span data-i18n="nav_track">Трекинг</span></a>
+      <a href="#flex"><i>06</i><span data-i18n="nav_flex">Гибкость</span></a>
+      <a href="#cases"><i>07</i><span data-i18n="nav_cases">Кейсы</span></a>
+      <a href="#contact"><i>08</i><span data-i18n="nav_contact">Контакты</span></a>
+    </nav>
+    <p class="ov-foot">+86 137 5755 4679 · Telegram / WhatsApp / WeChat: +375 25 504 17 41<br><span data-i18n="addr_v">Чжэцзян, г. Иу · Zhongfu Plaza, корпус B, эт. 27, офис 2704</span></p>
+  </div>
+</div>
+
+<main id="page">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <canvas id="fluid" aria-hidden="true"></canvas>
+  <div class="hero-veil" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <p class="kicker h-fade" style="--d:.2s"><span data-i18n="hero_kicker">OPENCHINA · КИТАЙ — РОССИЯ</span></p>
+    <h1>
+      <span class="h-line" style="--d:.3s"><span data-i18n="hero_l1">Из Иу —</span></span>
+      <span class="h-line" style="--d:.42s"><span class="accent" data-i18n="hero_l2">прямо в Россию</span></span>
+    </h1>
+    <p class="hero-tag h-fade" style="--d:.65s" data-i18n="hero_l3">Малому бизнесу — большой сервис</p>
+    <p class="hero-sub h-fade" style="--d:.75s" data-i18n="hero_sub">Берём заказы от ¥1000: SOHO-байеры Taobao, Pinduoduo и Poizon, стартап-команды, средний бизнес и сети. Москва — за 15 дней, а курс расчётов выгоднее, чем у большинства.</p>
+    <div class="hero-ctas h-fade" style="--d:.85s">
+      <a href="#contact" class="btn btn-gold magnetic"><span data-i18n="hero_cta1">Начать сотрудничество</span><b class="arr">→</b></a>
+      <a href="#payment" class="btn btn-ghost magnetic"><span data-i18n="hero_cta2">Способы оплаты</span></a>
+    </div>
+  </div>
+  <div class="hero-foot h-fade" style="--d:1s">
+    <div class="wrap hf-inner">
+      <span class="scroll-hint"><b class="s-line"></b><span data-i18n="hero_scroll">Листайте вниз</span></span>
+      <span class="coords">29.31°N · 120.07°E</span>
+    </div>
+  </div>
+  <div class="rail" aria-hidden="true">义乌 · YIWU · ИУ</div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="mq-track">
+    <span data-i18n="mq">ИУ → МОСКВА · 15 ДНЕЙ · ЗАКАЗЫ ОТ ¥1000 · ОТСРОЧКА ДО 45 ДНЕЙ · ЗАКУПКА · ПРОВЕРКА · USDT · КАРТА · НАЛИЧНЫЕ · </span><span data-i18n="mq">ИУ → МОСКВА · 15 ДНЕЙ · ЗАКАЗЫ ОТ ¥1000 · ОТСРОЧКА ДО 45 ДНЕЙ · ЗАКУПКА · ПРОВЕРКА · USDT · КАРТА · НАЛИЧНЫЕ · </span><span data-i18n="mq">ИУ → МОСКВА · 15 ДНЕЙ · ЗАКАЗЫ ОТ ¥1000 · ОТСРОЧКА ДО 45 ДНЕЙ · ЗАКУПКА · ПРОВЕРКА · USDT · КАРТА · НАЛИЧНЫЕ · </span><span data-i18n="mq">ИУ → МОСКВА · 15 ДНЕЙ · ЗАКАЗЫ ОТ ¥1000 · ОТСРОЧКА ДО 45 ДНЕЙ · ЗАКУПКА · ПРОВЕРКА · USDT · КАРТА · НАЛИЧНЫЕ · </span>
+  </div>
+</div>
+
+<!-- ============ ABOUT 01 ============ -->
+<section class="sec" id="about">
+  <span class="ghost" aria-hidden="true">信</span>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-no">01</span>
+      <span class="sec-label" data-i18n="about_label">О нас</span><i class="sec-rule" aria-hidden="true"></i>
+    </div>
+    <h2 class="sec-title reveal" style="--d:.06s" data-i18n="about_title">Самое надёжное звено в торговле между Китаем и Россией</h2>
+    <div class="about-grid">
+      <div class="about-copy reveal" style="--d:.1s">
+        <p data-i18n="about_p1">OpenChina — внешнеторговая компания из Иу, крупнейшего в мире центра мелкооптовых товаров. Наш офис — рядом с рынком: Zhongfu Plaza, корпус B, 27 этаж. Каждый заказ — от поиска товара и переговоров по цене до проверки и отгрузки — ведёт персональный менеджер.</p>
+        <p data-i18n="about_p2">Мы работаем только с российским направлением. Команда говорит по-русски и понимает, как сегодня непросто с расчётами: принимаем криптовалюту, переводы на карту и наличные — как удобнее вам; канал для платежей на счёт компании готовится к запуску. Магистральную логистику выполняют давние партнёры (Dayang Group, ALA Group); мы отвечаем за товар, качество и деньги.</p>
+      </div>
+      <ul class="edge reveal" style="--d:.16s">
+        <li><b data-i18n="e1t">Гибкие расчёты</b><span data-i18n="e1d">USDT, карта, наличные — и курс расчётов выгоднее, чем у большинства</span></li>
+        <li><b data-i18n="e2t">Отгрузка после проверки</b><span data-i18n="e2d">Каждая партия — с фото- и видеоотчётом; брак не уезжает со склада</span></li>
+        <li><b data-i18n="e3t">Личный менеджер на русском</b><span data-i18n="e3d">Один заказ — один менеджер, полностью на русском, ответ в рабочее время</span></li>
+        <li><b data-i18n="e4t">Цены из первых рук</b><span data-i18n="e4d">Мы внутри рынка Иу: товар и цены — напрямую от источника</span></li>
+      </ul>
+    </div>
+    <div class="stats reveal" style="--d:.2s">
+      <div class="stat"><b class="stat-v num" data-target="500" data-suffix="+">500+</b><span class="stat-l" data-i18n="s1l">клиентов</span></div>
+      <div class="stat"><b class="stat-v num" data-target="2000" data-suffix="+">2000+</b><span class="stat-l" data-i18n="s2l">выполненных заказов</span></div>
+      <div class="stat"><b class="stat-v">≤12h</b><span class="stat-l" data-i18n="s3l">ответ на заявку</span></div>
+      <div class="stat"><b class="stat-v num" data-target="100" data-suffix="%">100%</b><span class="stat-l" data-i18n="s4l">отгрузка после проверки</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES 02 ============ -->
+<section class="sec sec-alt" id="services">
+  <span class="ghost" aria-hidden="true">通</span>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-no">02</span>
+      <span class="sec-label" data-i18n="services_label">Наши услуги</span><i class="sec-rule" aria-hidden="true"></i>
+    </div>
+    <h2 class="sec-title reveal" style="--d:.06s" data-i18n="services_title">От одного образца — до целого контейнера</h2>
+    <div class="slist">
+      <div class="srow reveal"><span class="no">S.01</span><h3 data-i18n="sv1t">Закупка товаров</h3><p data-i18n="sv1d">Поиск товара на рынке Иу и фабриках региона, сравнение цен, переговоры, образцы и размещение заказа.</p><span class="arr">→</span></div>
+      <div class="srow reveal" style="--d:.05s"><span class="no">S.02</span><h3 data-i18n="sv2t">Контроль качества</h3><p data-i18n="sv2d">Перед отгрузкой проверяем количество, характеристики и внешний вид каждой партии — с фото- и видеоотчётом.</p><span class="arr">→</span></div>
+      <div class="srow reveal" style="--d:.1s"><span class="no">S.03</span><h3 data-i18n="sv3t">Доставка до двери</h3><p data-i18n="sv3d">Москва — за 15 дней, дольше 18 — компенсация; перевозка в основные города России.</p><span class="arr">→</span></div>
+      <div class="srow reveal" style="--d:.15s"><span class="no">S.04</span><h3 data-i18n="sv4t">Таможенное оформление</h3><p data-i18n="sv4d">Экспортная декларация и растаможка в стране назначения под ключ, полный пакет документов.</p><span class="arr">→</span></div>
+      <div class="srow reveal" style="--d:.2s"><span class="no">S.05</span><h3 data-i18n="sv5t">Склад и консолидация</h3><p data-i18n="sv5d">Собственный склад в Иу: приёмка, маркировка, паллетирование и сборные отправки для небольших партий.</p><span class="arr">→</span></div>
+      <div class="srow reveal" style="--d:.25s"><span class="no">S.06</span><h3 data-i18n="sv6t">Расчётные решения</h3><p data-i18n="sv6d">Несколько каналов оплаты, прозрачный курс, подтверждение по факту поступления — каждый платёж задокументирован.</p><span class="arr">→</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAYMENT 03 ============ -->
+<section class="sec" id="payment">
+  <span class="ghost" aria-hidden="true">付</span>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-no">03</span>
+      <span class="sec-label" data-i18n="pay_label">Оплата</span><i class="sec-rule" aria-hidden="true"></i>
+    </div>
+    <h2 class="sec-title reveal" style="--d:.06s" data-i18n="pay_title">Платите так, как вам удобно</h2>
+    <p class="pay-sub reveal" style="--d:.1s" data-i18n="pay_sub">Трансграничные расчёты не должны мешать бизнесу. Мы держим несколько параллельных каналов и комбинируем их под сумму заказа и ваши привычки.</p>
+    <div class="pgrid">
+      <div class="pcard reveal"><span class="pidx">P.01</span><span class="ptag" data-i18n="pm1g">Популярно</span><h3 data-i18n="pm1t">Криптовалюта</h3><p data-i18n="pm1d">Принимаем USDT (TRC-20 / ERC-20) и другие стейблкоины: быстро и с минимальной комиссией — лучший вариант для крупных сумм.</p></div>
+      <div class="pcard reveal" style="--d:.07s"><span class="pidx">P.02</span><h3 data-i18n="pm2t">Перевод на карту</h3><p data-i18n="pm2d">Переводы между российскими и белорусскими картами по курсу на день оплаты — удобно для частых небольших заказов.</p></div>
+      <div class="pcard reveal" style="--d:.14s"><span class="pidx">P.03</span><h3 data-i18n="pm3t">Наличные</h3><p data-i18n="pm3d">Приём наличных в нескольких валютах в офисе в Иу: пересчёт и расчёт при встрече — для тех, кто приезжает за товаром лично.</p></div>
+      <div class="pcard reveal" style="--d:.21s"><span class="pidx">P.04</span><span class="ptag soon" data-i18n="pm4g">Скоро</span><h3 data-i18n="pm4t">Банковский перевод</h3><p data-i18n="pm4d">Канал для платежей на счёт компании готовится к запуску — банковские переводы по контракту.</p></div>
+    </div>
+    <p class="pay-fx reveal" style="--d:.22s" data-i18n="pay_fx">В отличие от большинства компаний, наш курс при расчётах заметно выгоднее — сравните перед заказом.</p>
+    <p class="pnote reveal" style="--d:.26s" data-i18n="pay_note">* Все платежи проводятся после подтверждения заказа. Суммы, курс и подтверждения фиксируются по каждой сделке.</p>
+  </div>
+</section>
+
+<!-- ============ PROCESS 04 ============ -->
+<section class="sec sec-alt" id="process">
+  <span class="ghost" aria-hidden="true">流</span>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-no">04</span>
+      <span class="sec-label" data-i18n="proc_label">Процесс поставки</span><i class="sec-rule" aria-hidden="true"></i>
+    </div>
+    <h2 class="sec-title reveal" style="--d:.06s" data-i18n="proc_title">Восемь шагов: от заказа до получения</h2>
+    <div class="proc">
+      <div class="step reveal"><span class="pn">01</span><h4 data-i18n="p1t">Заказ</h4><p data-i18n="p1d">Фиксируем ассортимент, объём и требования; расчёт за 12 часов</p></div>
+      <div class="step reveal" style="--d:.05s"><span class="pn">02</span><h4 data-i18n="p2t">Оплата товара</h4><p data-i18n="p2d">Оплачиваете товар после подтверждения спецификации</p></div>
+      <div class="step reveal" style="--d:.1s"><span class="pn">03</span><h4 data-i18n="p3t">Закупка</h4><p data-i18n="p3d">Покупаем напрямую на рынке Иу и на фабриках</p></div>
+      <div class="step reveal" style="--d:.15s"><span class="pn">04</span><h4 data-i18n="p4t">Приёмка</h4><p data-i18n="p4d">Пересчёт и регистрация груза на нашем складе</p></div>
+      <div class="step reveal" style="--d:.2s"><span class="pn">05</span><h4 data-i18n="p5t">Проверка качества</h4><p data-i18n="p5d">Каждая партия — с фото- и видеоотчётом; брак не уезжает</p></div>
+      <div class="step reveal" style="--d:.25s"><span class="pn">06</span><h4 data-i18n="p6t">Отгрузка</h4><p data-i18n="p6d">Консолидация, погрузка и таможенное оформление</p></div>
+      <div class="step reveal" style="--d:.3s"><span class="pn">07</span><h4 data-i18n="p7t">Оплата доставки</h4><p data-i18n="p7d">Фрахт — по фактическому объёму и весу</p></div>
+      <div class="step reveal" style="--d:.35s"><span class="pn">08</span><h4 data-i18n="p8t">Получение в России</h4><p data-i18n="p8d">Самовывоз в Москве или перевозка в основные города России</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CASES 05 ============ -->
+<section class="sec sec-alt" id="track">
+  <span class="ghost" aria-hidden="true">踪</span>
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-no">05</span><span class="sec-label" data-i18n="track_label">Отслеживание</span><i class="sec-rule" aria-hidden="true"></i></div>
+    <h2 class="sec-title reveal" style="--d:.05s" data-i18n="track_title">Где сейчас ваш груз?</h2>
+    <p class="pay-sub reveal" style="--d:.1s" data-i18n="track_sub">Введите номер груза из накладной — покажем статус по всему маршруту Иу → Москва.</p>
+    <form id="track-form" class="track-bar reveal" style="--d:.14s" novalidate>
+      <input id="track-no" type="text" autocomplete="off" spellcheck="false" data-i18n-ph="track_ph" placeholder="Номер груза, напр. OC-92841" aria-label="Номер груза">
+      <button type="submit" class="btn btn-gold"><span data-i18n="track_btn">Отследить</span><b class="arr">→</b></button>
+    </form>
+    <p class="track-err" id="track-err" data-i18n="track_err">Введите номер груза — он указан в накладной и в сообщении менеджера.</p>
+    <div class="tr-res" id="tr-res" hidden>
+      <div class="tr-head">
+        <div><span class="tr-no-l" data-i18n="track_no_l">Груз</span><b class="tr-no" id="tr-no">—</b></div>
+        <span class="chip" id="tr-chip">—</span>
+      </div>
+      <div class="tr-exc" id="tr-exc" hidden><span class="tr-exc-b">!</span><span id="tr-exc-t">—</span></div>
+      <ol class="stepper" id="tr-steps"></ol>
+      <p class="tr-upd"><span data-i18n="track_upd">Обновлено</span>: <span id="tr-upd">—</span> <span class="tr-demo" id="tr-demo" data-i18n="track_demo">демо-данные · бэкенд скоро</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="flex">
+  <span class="ghost" aria-hidden="true">灵</span>
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-no">06</span><span class="sec-label" data-i18n="flex_label">Гибкость</span><i class="sec-rule" aria-hidden="true"></i></div>
+    <h2 class="sec-title reveal" style="--d:.05s" data-i18n="flex_title">От заказа на ¥1000 до сетевых поставок</h2>
+    <p class="pay-sub reveal" style="--d:.1s" data-i18n="flex_sub">Сопровождаем микробизнес и усиливаем средние команды: масштаб разный, решения разные — стандарт сервиса один.</p>
+    <div class="auds">
+      <article class="aud reveal"><span class="a-no">A.01</span><h3 data-i18n="aud1t">SOHO-байеры маркетплейсов</h3><p data-i18n="aud1d">Продавцы Taobao, Pinduoduo, Poizon: мелкие партии, быстрые дозаказы, сборные контейнеры</p></article>
+      <article class="aud reveal" style="--d:.07s"><span class="a-no">A.02</span><h3 data-i18n="aud2t">Стартап-команды</h3><p data-i18n="aud2d">Ведём первый заказ за руку: подбор товара, сравнение цен — риск сведён к минимуму</p></article>
+      <article class="aud reveal" style="--d:.14s"><span class="a-no">A.03</span><h3 data-i18n="aud3t">Средние компании и сети</h3><p data-i18n="aud3d">Стабильные поставки и персональные условия: свой менеджер, приоритет в работе, отсрочка платежа</p></article>
+    </div>
+    <div class="sla reveal">
+      <div class="sla-i"><b class="stat-v">¥1000</b><span class="stat-l" data-i18n="flex1l">минимальная сумма заказа — без требований к объёму</span></div>
+      <div class="sla-i"><b class="stat-v">45</b><span class="stat-l" data-i18n="flex2l">дней — максимальная отсрочка для клиентов с высоким рейтингом</span></div>
+    </div>
+    <aside class="loy reveal"><b data-i18n="loy_t">Программа лояльности</b><p data-i18n="loy_d">Чем выше рейтинг — тем лучше условия: ниже сервисный сбор, более конкурентные закупочные цены и отсрочка платежа до 45 дней.</p></aside>
+    <p class="gal-l reveal" data-i18n="gal_l">Кадры с места · Иу</p>
+    <!-- 占位图：上线前将每个 .gph-i 内替换为真实 <img>（推荐 4:5 竖图），样式已为照片预设 -->
+    <div class="gal">
+      <figure class="gph reveal"><div class="gph-i"><span>PHOTO 01</span><img src="https://commons.wikimedia.org/wiki/Special:FilePath/201706%20Overview%20of%20Yiwu%20International%20Trading%20Town.jpg?width=900" alt="Международный торговый город Иу" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()"></div><figcaption><span data-i18n="g1">Международный торговый город Иу</span><a class="ph-src" href="https://commons.wikimedia.org/wiki/File:201706_Overview_of_Yiwu_International_Trading_Town.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></figcaption></figure>
+      <figure class="gph reveal" style="--d:.07s"><div class="gph-i"><span>PHOTO 02</span><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Yiwu%20international%20trade%20city%20district%201%20gramophone%20store.jpg?width=900" alt="Торговые ряды · район 1" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()"></div><figcaption><span data-i18n="g2">Торговые ряды · район 1</span><a class="ph-src" href="https://commons.wikimedia.org/wiki/File:Yiwu_international_trade_city_district_1_gramophone_store.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></figcaption></figure>
+      <figure class="gph reveal" style="--d:.14s"><div class="gph-i"><span>PHOTO 03</span><img src="https://commons.wikimedia.org/wiki/Special:FilePath/%E9%9C%8D%E5%B0%94%E6%9E%9C%E6%96%AF%E5%8F%A3%E5%B2%B8%E9%80%9A%E5%85%B3%E4%B8%AD%20%287731474342%29.jpg?width=900" alt="Грузовики на таможне · Хоргос" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()"></div><figcaption><span data-i18n="g3">Грузовики на таможне · Хоргос</span><a class="ph-src" href="https://commons.wikimedia.org/wiki/File:%E9%9C%8D%E5%B0%94%E6%9E%9C%E6%96%AF%E5%8F%A3%E5%B2%B8%E9%80%9A%E5%85%B3%E4%B8%AD_%287731474342%29.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></figcaption></figure>
+      <figure class="gph reveal" style="--d:.21s"><div class="gph-i"><span>PHOTO 04</span><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese-Kazakh%20Khorgas%20border.jpg?width=900" alt="Граница Китай — Казахстан · Хоргос" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()"></div><figcaption><span data-i18n="g4">Граница Китай — Казахстан · Хоргос</span><a class="ph-src" href="https://commons.wikimedia.org/wiki/File:Chinese-Kazakh_Khorgas_border.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-alt" id="cases">
+  <span class="ghost" aria-hidden="true">货</span>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-no">07</span>
+      <span class="sec-label" data-i18n="cases_label">Кейсы и отзывы</span><i class="sec-rule" aria-hidden="true"></i>
+    </div>
+    <h2 class="sec-title reveal" style="--d:.06s" data-i18n="cases_title">Они идут этим маршрутом уже много лет</h2>
+    <div class="testi">
+      <figure class="tcard reveal"><span class="qm">“</span><blockquote data-i18n="t1q">За три года сотрудничества — ни одного сбоя; это по-настоящему надёжные люди. Фото с проверки присылают такие подробные, будто я сам стою на рынке.</blockquote><figcaption class="who"><span class="ava" data-i18n="t1a">Д</span><span><b data-i18n="t1n">Дмитрий К.</b><i data-i18n="t1m">Москва · сеть магазинов товаров для дома</i></span></figcaption></figure>
+      <figure class="tcard reveal" style="--d:.08s"><span class="qm">“</span><blockquote data-i18n="t2q">С USDT всё просто, а от заказа до получения товара прошло всего 16 дней. Для интернет-торговли ритм решает всё.</blockquote><figcaption class="who"><span class="ava" data-i18n="t2a">А</span><span><b data-i18n="t2n">Анна С.</b><i data-i18n="t2m">Екатеринбург · интернет-магазин</i></span></figcaption></figure>
+      <figure class="tcard reveal" style="--d:.16s"><span class="qm">“</span><blockquote data-i18n="t3q">Стройматериалы — тяжёлые и разнородные. Ребята собрали груз от пяти поставщиков в один контейнер; по железной дороге до Новосибирска — 38 дней, и я серьёзно сэкономил.</blockquote><figcaption class="who"><span class="ava" data-i18n="t3a">С</span><span><b data-i18n="t3n">Сергей В.</b><i data-i18n="t3m">Новосибирск · оптовая торговля стройматериалами</i></span></figcaption></figure>
+    </div>
+    <div class="routes reveal" style="--d:.1s">
+      <p class="routes-cap" data-i18n="routes_cap">Ориентиры по срокам («дверь – дверь»)</p>
+      <div class="rrow rhead"><span data-i18n="rh_cat">Категория</span><span data-i18n="rh_vol">Объём</span><span data-i18n="rh_route">Маршрут</span><span data-i18n="rh_time">Срок</span></div>
+      <div class="rrow"><span class="rt-cat" data-i18n="r1_cat">Товары для дома</span><span data-i18n="r1_vol">50 кг – 40HQ</span><span data-i18n="r1_route">Иу → Москва · автомагистраль</span><span class="rt-time" data-i18n="r1_time">15 дней</span></div>
+      <div class="rrow"><span class="rt-cat" data-i18n="r2_cat">Инструменты</span><span data-i18n="r2_vol">50 кг – 40HQ</span><span data-i18n="r2_route">Иу → Екатеринбург</span><span class="rt-time" data-i18n="r2_time">≈ 20 дней</span></div>
+      <div class="rrow"><span class="rt-cat" data-i18n="r3_cat">Одежда и обувь</span><span data-i18n="r3_vol">Сборная фура 8 м³</span><span data-i18n="r3_route">Иу → Санкт-Петербург</span><span class="rt-time" data-i18n="r3_time">≈ 20 дней</span></div>
+    </div>
+    <p class="routes-note reveal" data-i18n="routes_note">Москва — 15 дней, дольше 18 — компенсация по договору. Магистрали выполняют партнёры Dayang Group и ALA Group.</p>
+  </div>
+</section>
+
+<!-- ============ CONTACT 06 ============ -->
+<section class="sec" id="contact">
+  <span class="ghost" aria-hidden="true">联</span>
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <canvas id="fluid2" aria-hidden="true"></canvas>
+      <div class="cta-veil" aria-hidden="true"></div>
+      <div class="wrap">
+        <h2 class="sec-title" data-i18n="contact_title">Следующий контейнер начинается с одного сообщения</h2>
+        <p class="contact-sub" data-i18n="contact_sub">Напишите, какой товар нужен и в какой город — в течение 12 часов пришлём цену и план.</p>
+        <a href="#form" class="btn btn-gold magnetic"><span data-i18n="hero_cta1">Начать сотрудничество</span><b class="arr">→</b></a>
+      </div>
+    </div>
+    <div class="sec-head reveal">
+      <span class="sec-no">08</span>
+      <span class="sec-label" data-i18n="contact_label">Контакты</span><i class="sec-rule" aria-hidden="true"></i>
+    </div>
+    <div class="contact-grid">
+      <div class="cinfo reveal" style="--d:.06s">
+        <h3 class="info-t" data-i18n="info_t">Как нас найти</h3>
+        <div class="irow"><span class="il" data-i18n="addr_l">Адрес</span><span class="iv" data-i18n="addr_v">Чжэцзян, г. Иу · Zhongfu Plaza, корпус B, эт. 27, офис 2704</span></div>
+        <div class="irow"><span class="il" data-i18n="tel_l">Телефон</span><span class="iv big"><a href="tel:+8613757554679">+86 137 5755 4679</a></span></div>
+        <div class="irow"><span class="il" data-i18n="im_l">Мессенджеры</span><span class="iv">Telegram · WhatsApp · WeChat<br>+375 25 504 17 41</span></div>
+        <div class="irow"><span class="il" data-i18n="hrs_l">Время работы</span><span class="iv" data-i18n="hrs_v">Пн–Сб 9:00 – 18:00 (GMT+8)</span></div>
+      </div>
+      <div class="form-wrap reveal" style="--d:.12s">
+        <form id="form" class="form-inner" novalidate>
+          <h3 class="form-t" data-i18n="form_t">Оставить заявку</h3>
+          <div class="field"><label for="f-name" data-i18n="f_name">Как к вам обращаться</label><input id="f-name" name="name" type="text" autocomplete="name"></div>
+          <div class="field"><label for="f-contact" data-i18n="f_contact">Контакт (Telegram / WhatsApp / телефон)</label><input id="f-contact" name="contact" type="text" autocomplete="off"></div>
+          <div class="field"><label for="f-msg" data-i18n="f_msg">Что нужно (товар / объём / город доставки)</label><textarea id="f-msg" name="msg" rows="4"></textarea></div>
+          <p class="f-err" data-i18n="f_err">Пожалуйста, заполните все поля — так мы ответим быстрее.</p>
+          <button type="submit" class="btn btn-gold magnetic"><span data-i18n="f_send">Отправить заявку</span><b class="arr">→</b></button>
+        </form>
+        <div class="form-ok" aria-live="polite">
+          <b data-i18n="ok_t">Заявка получена</b>
+          <p data-i18n="ok_p">Свяжемся с вами в течение 12 часов. Если срочно — звоните или пишите в Telegram.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="f-word" aria-hidden="true">OPENCHINA</div>
+  <div class="wrap">
+    <div class="f-grid">
+      <div>
+        <span class="logo">OPEN<b>CHINA</b><i class="mk"></i></span>
+        <p class="f-tag" data-i18n="foot_tag">База в Иу · работаем с Россией
+Ваш партнёр в торговле Китай—Россия</p>
+      </div>
+      <div>
+        <p class="f-h" data-i18n="foot_nav">Навигация</p>
+        <ul>
+          <li><a href="#about" data-i18n="nav_about">О нас</a></li>
+          <li><a href="#services" data-i18n="nav_services">Услуги</a></li>
+          <li><a href="#payment" data-i18n="nav_payment">Оплата</a></li>
+          <li><a href="#track" data-i18n="nav_track">Трекинг</a></li>
+          <li><a href="#flex" data-i18n="nav_flex">Гибкость</a></li>
+          <li><a href="#cases" data-i18n="nav_cases">Кейсы</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="f-h" data-i18n="foot_contact_l">Контакты</p>
+        <address>
+          <a href="tel:+8613757554679">+86 137 5755 4679</a><br>
+          <span>Telegram · WhatsApp · WeChat: +375 25 504 17 41</span><br>
+          <span data-i18n="addr_v">Чжэцзян, г. Иу · Zhongfu Plaza, корпус B, эт. 27, офис 2704</span><br>
+          <span data-i18n="hrs_v">Пн–Сб 9:00 – 18:00 (GMT+8)</span>
+        </address>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span>© 2026 OpenChina</span>
+      <span data-i18n="rights">Все права защищены</span>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /#site -->
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- i18n ---------- */
+var I18N = {
+zh: {
+  title:"OpenChina · 中俄一站式贸易服务 | 义乌",
+  nav_about:"关于我们",nav_services:"服务",nav_payment:"付款方式",nav_cases:"客户案例",nav_contact:"联系我们",
+  nav_cta:"立即询盘",menu:"菜单",close:"关闭",
+  hero_kicker:"OPENCHINA · 中国 — 俄罗斯",
+  hero_l1:"从义乌出发，",hero_l2:"直达俄罗斯",hero_l3:"小生意，大服务。",
+  hero_sub:"1000 元的订单我们也接：淘宝、拼多多、得物的 SOHO 买手，初创小团队，到连锁企业——陪跑小微，助力中型。莫斯科 15 天直达，结算汇率优于多数同行。",
+  hero_cta1:"开始合作",hero_cta2:"查看付款方式",hero_scroll:"向下滚动",
+  mq:"义乌 → 莫斯科 15 天 · 1000 元起接单 · 最长 45 天账期 · 采购 · 验货 · 结算 · USDT · 转卡 · 现金 ·\u00a0",
+  about_label:"关于我们",about_title:"在中俄贸易里，做最让人放心的那一环",
+  about_p1:"OpenChina 是一家扎根义乌的外贸服务公司。义乌是全球最大的小商品集散地，我们就在市场旁边——中福广场 B 座 27 楼。客户的每一张订单，从找货、比价、验货到装柜发运，都有专人盯到底。",
+  about_p2:"我们专注俄罗斯方向。团队懂俄语、懂俄罗斯客户的习惯，更懂当下结算的难处：加密货币、银行转卡、现金，怎么方便怎么来；对公账户通道也在筹备中。干线物流由长期合作伙伴（大洋集团、ALA 集团）执行；我们专注把货、质量与钱管好。",
+  e1t:"结算灵活",e1d:"USDT、转卡、现金并行，结算汇率优于多数同行",
+  e2t:"验货后发运",e2d:"每批查验、影像留档，不合格不出库",
+  e3t:"俄语专人盯单",e3d:"一单一专人，全程俄语对接，工作时间内即时响应",
+  e4t:"源头价格",e4d:"身处义乌市场源头，一手货源、一手价格",
+  s1l:"合作客户",s2l:"完成订单",s3l:"询盘响应",s4l:"验货后发运",
+  services_label:"我们的服务",services_title:"从一件样品，到一个货柜",
+  sv1t:"商品采购",sv1d:"依托义乌市场与周边产业带，按需求找货、比价、谈判，提供样品确认与代采下单。",
+  sv2t:"验货质检",sv2d:"出货前逐批查验数量、规格与外观，拍照拍视频留档，不合格即时退换。",
+  sv3t:"门到门物流",sv3d:"莫斯科 15 天直达，超 18 天按约赔付；支持转运至俄罗斯主要城市。",
+  sv4t:"报关清关",sv4d:"出口报关与目的港清关一手操办，单证齐全，流程透明可查。",
+  sv5t:"仓储拼柜",sv5d:"义乌自有仓收货、贴标、打托，小批量货物拼柜发运，降低物流成本。",
+  sv6t:"结算服务",sv6d:"多种付款通道并行，汇率透明、到账即确认，每一笔都有据可查。",
+  pay_label:"付款方式",pay_title:"怎么方便，就怎么付",
+  pay_sub:"跨境结算不该成为生意的障碍。我们提供多条并行通道，按订单金额与您的习惯灵活组合。",
+  pm1g:"推荐",pm1t:"加密货币",pm1d:"支持 USDT（TRC-20 / ERC-20）等主流稳定币，到账快、手续费低，大额结算首选。",
+  pm2t:"银行转卡",pm2d:"支持俄罗斯、白俄罗斯本地银行卡互转，按当日汇率折算，小额高频订单最为顺手。",
+  pm3t:"现金支付",pm3d:"义乌办公室支持多币种现金交收，当面点验、当面结清，适合来华看货的客户。",
+  pm4g:"即将开通",pm4t:"对公转账",pm4d:"公司对公账户通道正在筹备中，开通后将支持合同项下的银行电汇结算。",
+  pay_note:"* 所有付款均在订单确认后进行，金额、汇率与凭证逐单留档，双方可查。",
+  pay_fx:"区别于多数同行：我们的结算汇率有明显优势——下单前欢迎实时比价。",
+  routes_note:"莫斯科 15 天直达，超 18 天按约赔付。干线由合作伙伴大洋集团、ALA 集团执行。",
+  proc_label:"交付流程",proc_title:"八步交付，从下单到取货",
+  p1t:"下单",p1d:"明确品类、数量与要求，12 小时内出报价",
+  p2t:"货款打款",p2d:"确认订单明细后支付货款",
+  p3t:"采购",p3d:"义乌市场与工厂一手采买",
+  p4t:"收货",p4d:"到仓清点、登记入库",
+  p5t:"验货质检",p5d:"逐批查验，影像留档，不合格不出库",
+  p6t:"发货",p6d:"拼柜装运，报关出境",
+  p7t:"运费打款",p7d:"按实际体积与重量结算运费",
+  p8t:"俄罗斯取货",p8d:"莫斯科自提，或转运至俄罗斯主要城市",
+  cases_label:"客户案例",cases_title:"他们已经在这条路上跑了很多年",
+  t1q:"合作三年，没有一单出过岔子，他们是很可靠的人。验货照片发得比我自己去市场看还细。",
+  t1n:"Дмитрий К.",t1m:"莫斯科 · 日用百货连锁",t1a:"Д",
+  t2q:"用 USDT 结算特别省事，从下单到收到货只花了 16 天。对做电商的我来说，节奏就是一切。",
+  t2n:"Анна С.",t2m:"叶卡捷琳堡 · 电商卖家",t2a:"А",
+  t3q:"建材又重又杂，他们帮我把五个供应商的货拼进一个柜，铁路 38 天到新西伯利亚，成本省了一大截。",
+  t3n:"Сергей В.",t3m:"新西伯利亚 · 建材批发",t3a:"С",
+  routes_cap:"发运时效参考（门到门）",
+  rh_cat:"品类",rh_vol:"货量",rh_route:"线路",rh_time:"时效",
+  r1_cat:"家居日用",r1_vol:"50kg – 40HQ",r1_route:"义乌 → 莫斯科 · 公路干线",r1_time:"15 天",
+  r2_cat:"五金工具",r2_vol:"50kg – 40HQ",r2_route:"义乌 → 叶卡捷琳堡",r2_time:"约 20 天",
+  r3_cat:"服装鞋帽",r3_vol:"拼板车 8m³",r3_route:"义乌 → 圣彼得堡",r3_time:"约 20 天",
+  contact_label:"联系我们",contact_title:"下一个柜子，从一条消息开始",
+  contact_sub:"告诉我们您要什么货、发哪个城市，12 小时内给您报价与方案。",
+  info_t:"联系方式",
+  addr_l:"地址",addr_v:"浙江省义乌市 · 中福广场 B座 27F-2704",
+  tel_l:"电话",im_l:"即时通讯",hrs_l:"工作时间",hrs_v:"周一至周六 9:00 – 18:00（GMT+8）",
+  form_t:"在线询盘",
+  f_name:"您的称呼",f_contact:"联系方式（Telegram / WhatsApp / 电话）",f_msg:"需求描述（货品 / 数量 / 目的城市）",
+  f_send:"发送询盘",f_err:"请完整填写以上信息，方便我们尽快回复您。",
+  ok_t:"已收到您的询盘",ok_p:"我们将在 12 小时内与您联系。着急的话，欢迎直接致电或通过 Telegram 联系我们。",
+  foot_tag:"立足义乌 · 服务俄罗斯\n中俄一站式贸易伙伴",
+  nav_flex:"灵活合作",flex_label:"灵活合作",
+  flex_title:"1000 元小单到连锁大单，都接",
+  flex_sub:"我们陪跑小微企业，助力中型团队——规模不同，方案不同，服务标准相同。",
+  aud1t:"电商 SOHO 买手",aud1d:"淘宝、拼多多、得物等平台卖家：小批量起订、快速返单、支持拼柜",
+  aud2t:"初创小团队",aud2d:"首单全程陪跑：选品、比价、避坑，把试错成本降到最低",
+  aud3t:"中型企业与连锁",aud3d:"稳定供给与专属条款：专人对接、优先排产、账期支持",
+  flex1l:"元起接单 · 不设最低柜量",flex2l:"天最长账期 · 高评级客户专享",
+  loy_t:"客户忠诚度计划",
+  loy_d:"评级越高，条件越好：更低的服务费、更有竞争力的采购价，以及最长 45 天的账期。",
+  gal_l:"实拍 · 义乌现场",
+  g1:"义乌国际商贸城 · 全景",g2:"市场一区 · 档口实景",
+  g3:"货车通关 · 霍尔果斯口岸",g4:"中哈边界 · 霍尔果斯",
+  nav_track:"运踪查询",track_label:"运踪查询",
+  track_title:"您的货，现在到哪了？",
+  track_sub:"输入运单上的货号，即可查看义乌 → 莫斯科全程的实时状态。",
+  track_ph:"货号，例如 OC-92841",track_btn:"查询",
+  track_err:"请输入货号——它在您的运单和经理发送的信息里。",
+  track_no_l:"货号",track_upd:"更新于",track_demo:"演示数据 · 后端即将接入",
+  trk1:"入库中",trk2:"仓库打包",trk3:"装车发往中哈边界",trk4:"到达中哈边界",
+  trk5:"清关中",trk6:"清关结束",trk7:"发往莫斯科",trk8:"到达莫斯科",trk9:"可提货（可安排转运）",
+  exc_ins:"边界抽查中——货物正在接受海关查验，放行后状态将自动更新。",
+  exc_jam:"边界堵塞——口岸通行缓慢，时效可能顺延，我们正在跟进。",
+  foot_nav:"导航",foot_contact_l:"联系",rights:"保留所有权利"
+},
+ru: {
+  title:"OpenChina · Торговля Китай—Россия под ключ | Иу",
+  nav_about:"О нас",nav_services:"Услуги",nav_payment:"Оплата",nav_cases:"Кейсы",nav_contact:"Контакты",
+  nav_cta:"Оставить заявку",menu:"Меню",close:"Закрыть",
+  hero_kicker:"OPENCHINA · КИТАЙ — РОССИЯ",
+  hero_l1:"Из Иу —",hero_l2:"прямо в Россию",hero_l3:"Малому бизнесу — большой сервис",
+  hero_sub:"Берём заказы от ¥1000: SOHO-байеры Taobao, Pinduoduo и Poizon, стартап-команды, средний бизнес и сети. Москва — за 15 дней, а курс расчётов выгоднее, чем у большинства.",
+  hero_cta1:"Начать сотрудничество",hero_cta2:"Способы оплаты",hero_scroll:"Листайте вниз",
+  mq:"ИУ → МОСКВА · 15 ДНЕЙ · ЗАКАЗЫ ОТ ¥1000 · ОТСРОЧКА ДО 45 ДНЕЙ · ЗАКУПКА · ПРОВЕРКА · USDT · КАРТА · НАЛИЧНЫЕ ·\u00a0",
+  about_label:"О нас",about_title:"Самое надёжное звено в торговле между Китаем и Россией",
+  about_p1:"OpenChina — внешнеторговая компания из Иу, крупнейшего в мире центра мелкооптовых товаров. Наш офис — рядом с рынком: Zhongfu Plaza, корпус B, 27 этаж. Каждый заказ — от поиска товара и переговоров по цене до проверки и отгрузки — ведёт персональный менеджер.",
+  about_p2:"Мы работаем только с российским направлением. Команда говорит по-русски и понимает, как сегодня непросто с расчётами: принимаем криптовалюту, переводы на карту и наличные — как удобнее вам; канал для платежей на счёт компании готовится к запуску. Магистральную логистику выполняют давние партнёры (Dayang Group, ALA Group); мы отвечаем за товар, качество и деньги.",
+  e1t:"Гибкие расчёты",e1d:"USDT, карта, наличные — и курс расчётов выгоднее, чем у большинства",
+  e2t:"Отгрузка после проверки",e2d:"Каждая партия — с фото- и видеоотчётом; брак не уезжает со склада",
+  e3t:"Личный менеджер на русском",e3d:"Один заказ — один менеджер, полностью на русском, ответ в рабочее время",
+  e4t:"Цены из первых рук",e4d:"Мы внутри рынка Иу: товар и цены — напрямую от источника",
+  s1l:"клиентов",s2l:"выполненных заказов",s3l:"ответ на заявку",s4l:"отгрузка после проверки",
+  services_label:"Наши услуги",services_title:"От одного образца — до целого контейнера",
+  sv1t:"Закупка товаров",sv1d:"Поиск товара на рынке Иу и фабриках региона, сравнение цен, переговоры, образцы и размещение заказа.",
+  sv2t:"Контроль качества",sv2d:"Перед отгрузкой проверяем количество, характеристики и внешний вид каждой партии — с фото- и видеоотчётом.",
+  sv3t:"Доставка до двери",sv3d:"Москва — за 15 дней, дольше 18 — компенсация; перевозка в основные города России.",
+  sv4t:"Таможенное оформление",sv4d:"Экспортная декларация и растаможка в стране назначения под ключ, полный пакет документов.",
+  sv5t:"Склад и консолидация",sv5d:"Собственный склад в Иу: приёмка, маркировка, паллетирование и сборные отправки для небольших партий.",
+  sv6t:"Расчётные решения",sv6d:"Несколько каналов оплаты, прозрачный курс, подтверждение по факту поступления — каждый платёж задокументирован.",
+  pay_label:"Оплата",pay_title:"Платите так, как вам удобно",
+  pay_sub:"Трансграничные расчёты не должны мешать бизнесу. Мы держим несколько параллельных каналов и комбинируем их под сумму заказа и ваши привычки.",
+  pm1g:"Популярно",pm1t:"Криптовалюта",pm1d:"Принимаем USDT (TRC-20 / ERC-20) и другие стейблкоины: быстро и с минимальной комиссией — лучший вариант для крупных сумм.",
+  pm2t:"Перевод на карту",pm2d:"Переводы между российскими и белорусскими картами по курсу на день оплаты — удобно для частых небольших заказов.",
+  pm3t:"Наличные",pm3d:"Приём наличных в нескольких валютах в офисе в Иу: пересчёт и расчёт при встрече — для тех, кто приезжает за товаром лично.",
+  pm4g:"Скоро",pm4t:"Банковский перевод",pm4d:"Канал для платежей на счёт компании готовится к запуску — банковские переводы по контракту.",
+  pay_note:"* Все платежи проводятся после подтверждения заказа. Суммы, курс и подтверждения фиксируются по каждой сделке.",
+  pay_fx:"В отличие от большинства компаний, наш курс при расчётах заметно выгоднее — сравните перед заказом.",
+  routes_note:"Москва — 15 дней, дольше 18 — компенсация по договору. Магистрали выполняют партнёры Dayang Group и ALA Group.",
+  proc_label:"Процесс поставки",proc_title:"Восемь шагов: от заказа до получения",
+  p1t:"Заказ",p1d:"Фиксируем ассортимент, объём и требования; расчёт за 12 часов",
+  p2t:"Оплата товара",p2d:"Оплачиваете товар после подтверждения спецификации",
+  p3t:"Закупка",p3d:"Покупаем напрямую на рынке Иу и на фабриках",
+  p4t:"Приёмка",p4d:"Пересчёт и регистрация груза на нашем складе",
+  p5t:"Проверка качества",p5d:"Каждая партия — с фото- и видеоотчётом; брак не уезжает",
+  p6t:"Отгрузка",p6d:"Консолидация, погрузка и таможенное оформление",
+  p7t:"Оплата доставки",p7d:"Фрахт — по фактическому объёму и весу",
+  p8t:"Получение в России",p8d:"Самовывоз в Москве или перевозка в основные города России",
+  cases_label:"Кейсы и отзывы",cases_title:"Они идут этим маршрутом уже много лет",
+  t1q:"За три года сотрудничества — ни одного сбоя; это по-настоящему надёжные люди. Фото с проверки присылают такие подробные, будто я сам стою на рынке.",
+  t1n:"Дмитрий К.",t1m:"Москва · сеть магазинов товаров для дома",t1a:"Д",
+  t2q:"С USDT всё просто, а от заказа до получения товара прошло всего 16 дней. Для интернет-торговли ритм решает всё.",
+  t2n:"Анна С.",t2m:"Екатеринбург · интернет-магазин",t2a:"А",
+  t3q:"Стройматериалы — тяжёлые и разнородные. Ребята собрали груз от пяти поставщиков в один контейнер; по железной дороге до Новосибирска — 38 дней, и я серьёзно сэкономил.",
+  t3n:"Сергей В.",t3m:"Новосибирск · оптовая торговля стройматериалами",t3a:"С",
+  routes_cap:"Ориентиры по срокам («дверь – дверь»)",
+  rh_cat:"Категория",rh_vol:"Объём",rh_route:"Маршрут",rh_time:"Срок",
+  r1_cat:"Товары для дома",r1_vol:"50 кг – 40HQ",r1_route:"Иу → Москва · автомагистраль",r1_time:"15 дней",
+  r2_cat:"Инструменты",r2_vol:"50 кг – 40HQ",r2_route:"Иу → Екатеринбург",r2_time:"≈ 20 дней",
+  r3_cat:"Одежда и обувь",r3_vol:"Сборная фура 8 м³",r3_route:"Иу → Санкт-Петербург",r3_time:"≈ 20 дней",
+  contact_label:"Контакты",contact_title:"Следующий контейнер начинается с одного сообщения",
+  contact_sub:"Напишите, какой товар нужен и в какой город — в течение 12 часов пришлём цену и план.",
+  info_t:"Как нас найти",
+  addr_l:"Адрес",addr_v:"Чжэцзян, г. Иу · Zhongfu Plaza, корпус B, эт. 27, офис 2704",
+  tel_l:"Телефон",im_l:"Мессенджеры",hrs_l:"Время работы",hrs_v:"Пн–Сб 9:00 – 18:00 (GMT+8)",
+  form_t:"Оставить заявку",
+  f_name:"Как к вам обращаться",f_contact:"Контакт (Telegram / WhatsApp / телефон)",f_msg:"Что нужно (товар / объём / город доставки)",
+  f_send:"Отправить заявку",f_err:"Пожалуйста, заполните все поля — так мы ответим быстрее.",
+  ok_t:"Заявка получена",ok_p:"Свяжемся с вами в течение 12 часов. Если срочно — звоните или пишите в Telegram.",
+  foot_tag:"База в Иу · работаем с Россией\nВаш партнёр в торговле Китай—Россия",
+  nav_flex:"Гибкость",flex_label:"Гибкость",
+  flex_title:"От заказа на ¥1000 до сетевых поставок",
+  flex_sub:"Сопровождаем микробизнес и усиливаем средние команды: масштаб разный, решения разные — стандарт сервиса один.",
+  aud1t:"SOHO-байеры маркетплейсов",aud1d:"Продавцы Taobao, Pinduoduo, Poizon: мелкие партии, быстрые дозаказы, сборные контейнеры",
+  aud2t:"Стартап-команды",aud2d:"Ведём первый заказ за руку: подбор товара, сравнение цен — риск сведён к минимуму",
+  aud3t:"Средние компании и сети",aud3d:"Стабильные поставки и персональные условия: свой менеджер, приоритет в работе, отсрочка платежа",
+  flex1l:"минимальная сумма заказа — без требований к объёму",flex2l:"дней — максимальная отсрочка для клиентов с высоким рейтингом",
+  loy_t:"Программа лояльности",
+  loy_d:"Чем выше рейтинг — тем лучше условия: ниже сервисный сбор, более конкурентные закупочные цены и отсрочка платежа до 45 дней.",
+  gal_l:"Кадры с места · Иу",
+  g1:"Международный торговый город Иу",g2:"Торговые ряды · район 1",
+  g3:"Грузовики на таможне · Хоргос",g4:"Граница Китай — Казахстан · Хоргос",
+  nav_track:"Трекинг",track_label:"Отслеживание",
+  track_title:"Где сейчас ваш груз?",
+  track_sub:"Введите номер груза из накладной — покажем статус по всему маршруту Иу → Москва.",
+  track_ph:"Номер груза, напр. OC-92841",track_btn:"Отследить",
+  track_err:"Введите номер груза — он указан в накладной и в сообщении менеджера.",
+  track_no_l:"Груз",track_upd:"Обновлено",track_demo:"демо-данные · бэкенд скоро",
+  trk1:"Приёмка на склад",trk2:"Упаковка на складе",trk3:"В пути к границе КНР — Казахстан",trk4:"На границе КНР — Казахстан",
+  trk5:"Таможенное оформление",trk6:"Таможня пройдена",trk7:"В пути в Москву",trk8:"Прибыл в Москву",trk9:"Готов к выдаче (возможен развоз)",
+  exc_ins:"Выборочный досмотр на границе — груз проверяет таможня; статус обновится после выпуска.",
+  exc_jam:"Затор на границе — пункт пропуска перегружен, сроки могут сдвинуться; мы на связи.",
+  foot_nav:"Навигация",foot_contact_l:"Контакты",rights:"Все права защищены"
+},
+en: {
+  title:"OpenChina · China–Russia Trade, End to End | Yiwu",
+  nav_about:"About",nav_services:"Services",nav_payment:"Payment",nav_cases:"Cases",nav_contact:"Contact",
+  nav_cta:"Get a quote",menu:"Menu",close:"Close",
+  hero_kicker:"OPENCHINA · CHINA — RUSSIA",
+  hero_l1:"From Yiwu,",hero_l2:"straight to Russia",hero_l3:"Small business, big-league service.",
+  hero_sub:"We take orders from ¥1000: SOHO buyers on Taobao, Pinduoduo and Poizon, startup teams, mid-size firms and chains. Moscow in 15 days, with a sharper settlement FX rate than most.",
+  hero_cta1:"Start working with us",hero_cta2:"Payment options",hero_scroll:"Scroll down",
+  mq:"YIWU → MOSCOW · 15 DAYS · ORDERS FROM ¥1000 · UP TO 45-DAY TERMS · SOURCING · QC · USDT · CARD · CASH ·\u00a0",
+  about_label:"About us",about_title:"The link you can rely on in China–Russia trade",
+  about_p1:"OpenChina is a trading company rooted in Yiwu, the world's largest small-commodity hub. Our office sits right by the market — Zhongfu Plaza, Tower B, 27th floor. Every order gets one dedicated manager, from sourcing and price talks to inspection and loading.",
+  about_p2:"We focus on Russia alone. The team speaks Russian, knows how Russian buyers work, and understands today's settlement headaches: crypto, card transfers or cash — whatever works for you, with a corporate bank channel on the way. Trunk logistics is handled by long-term partners (Dayang Group, ALA Group); we mind the goods, the quality and the money.",
+  e1t:"Flexible settlement",e1d:"USDT, card and cash in parallel — with a sharper FX rate than most",
+  e2t:"Inspection-gated shipping",e2d:"Every batch leaves with photo and video records; rejects never ship",
+  e3t:"Dedicated Russian-speaking manager",e3d:"One order, one manager — full support in Russian within working hours",
+  e4t:"First-hand prices",e4d:"We sit inside the Yiwu market — goods and prices straight from the source",
+  s1l:"clients served",s2l:"orders completed",s3l:"quote response",s4l:"shipped after QC",
+  services_label:"Our services",services_title:"From a single sample to a full container",
+  sv1t:"Sourcing",sv1d:"We find, compare and negotiate across the Yiwu market and nearby factories, handle samples and place orders for you.",
+  sv2t:"Quality inspection",sv2d:"Every batch is checked for quantity, specs and finish before shipping, with photo and video records.",
+  sv3t:"Door-to-door logistics",sv3d:"Moscow in 15 days, compensation past 18; onward delivery to major Russian cities.",
+  sv4t:"Customs clearance",sv4d:"Export declaration and destination clearance handled end to end, with a complete document set.",
+  sv5t:"Warehousing & consolidation",sv5d:"Our Yiwu warehouse receives, labels and palletizes goods, consolidating small lots to cut freight costs.",
+  sv6t:"Settlement services",sv6d:"Multiple payment channels, transparent rates, confirmation on receipt — every payment documented.",
+  pay_label:"Payment",pay_title:"Pay the way that suits you",
+  pay_sub:"Cross-border settlement shouldn't slow business down. We keep several channels running in parallel and combine them to fit the order size and your habits.",
+  pm1g:"Popular",pm1t:"Cryptocurrency",pm1d:"We accept USDT (TRC-20 / ERC-20) and other major stablecoins — fast, low-fee, the go-to for larger amounts.",
+  pm2t:"Card transfer",pm2d:"Transfers between Russian and Belarusian bank cards at the day's rate — handy for frequent smaller orders.",
+  pm3t:"Cash",pm3d:"Multi-currency cash accepted at our Yiwu office, counted and settled face to face — ideal if you visit in person.",
+  pm4g:"Coming soon",pm4t:"Bank transfer",pm4d:"A corporate account channel is in preparation and will support contract-based wire transfers.",
+  pay_note:"* All payments are made after order confirmation. Amounts, rates and receipts are recorded for every deal.",
+  pay_fx:"Unlike most companies, our settlement FX rate is meaningfully better — compare live before you order.",
+  routes_note:"Moscow in 15 days; past 18, compensation per contract. Trunk lines are run by our partners Dayang Group and ALA Group.",
+  proc_label:"Delivery process",proc_title:"Eight steps from order to pickup",
+  p1t:"Order",p1d:"We lock the assortment, volumes and specs; quote within 12 hours",
+  p2t:"Goods payment",p2d:"You pay for the goods once the specification is confirmed",
+  p3t:"Sourcing",p3d:"We buy first-hand at the Yiwu market and factories",
+  p4t:"Intake",p4d:"Goods are counted and registered at our warehouse",
+  p5t:"Quality check",p5d:"Every batch inspected with photo and video records; rejects never ship",
+  p6t:"Dispatch",p6d:"Consolidation, loading and export customs",
+  p7t:"Freight payment",p7d:"Freight billed on actual volume and weight",
+  p8t:"Pickup in Russia",p8d:"Collect in Moscow, or onward delivery to major Russian cities",
+  cases_label:"Cases & reviews",cases_title:"They've been on this route for years",
+  t1q:"Three years of working together without a single slip — genuinely reliable people. The inspection photos are more detailed than what I'd see walking the market myself.",
+  t1n:"Dmitry K.",t1m:"Moscow · household goods retail chain",t1a:"D",
+  t2q:"USDT makes it painless — just 16 days from placing the order to receiving the goods. In e-commerce, rhythm is everything.",
+  t2n:"Anna S.",t2m:"Yekaterinburg · e-commerce seller",t2a:"A",
+  t3q:"Building materials are heavy and messy. They consolidated five suppliers into one container — 38 days by rail to Novosibirsk — and saved me a serious amount.",
+  t3n:"Sergey V.",t3m:"Novosibirsk · building materials wholesale",t3a:"S",
+  routes_cap:"Reference door-to-door lead times",
+  rh_cat:"Category",rh_vol:"Volume",rh_route:"Route",rh_time:"Lead time",
+  r1_cat:"Household goods",r1_vol:"50 kg – 40HQ",r1_route:"Yiwu → Moscow · trunk road",r1_time:"15 days",
+  r2_cat:"Tools & hardware",r2_vol:"50 kg – 40HQ",r2_route:"Yiwu → Yekaterinburg",r2_time:"≈ 20 days",
+  r3_cat:"Apparel & footwear",r3_vol:"LTL truck 8 m³",r3_route:"Yiwu → St. Petersburg",r3_time:"≈ 20 days",
+  contact_label:"Contact",contact_title:"Your next container starts with one message",
+  contact_sub:"Tell us what you need and which city it's going to — we'll reply with pricing and a plan within 12 hours.",
+  info_t:"Find us",
+  addr_l:"Address",addr_v:"Zhongfu Plaza, Tower B, 27F-2704, Yiwu, Zhejiang, China",
+  tel_l:"Phone",im_l:"Messengers",hrs_l:"Working hours",hrs_v:"Mon–Sat 9:00 – 18:00 (GMT+8)",
+  form_t:"Send an inquiry",
+  f_name:"Your name",f_contact:"Contact (Telegram / WhatsApp / phone)",f_msg:"What you need (goods / quantity / destination city)",
+  f_send:"Send inquiry",f_err:"Please fill in all fields so we can get back to you faster.",
+  ok_t:"Inquiry received",ok_p:"We'll get back to you within 12 hours. In a hurry? Call us or message on Telegram.",
+  foot_tag:"Based in Yiwu · serving Russia\nYour China–Russia trade partner",
+  nav_flex:"Flexibility",flex_label:"Flexibility",
+  flex_title:"From ¥1000 orders to chain-scale supply",
+  flex_sub:"We run alongside micro-businesses and back mid-size teams — different scale, different setup, one service standard.",
+  aud1t:"Marketplace SOHO buyers",aud1d:"Sellers on Taobao, Pinduoduo and Poizon: small batches, fast re-orders, LCL consolidation",
+  aud2t:"Startup teams",aud2d:"We walk your first order through end to end — sourcing, price checks, fewer costly mistakes",
+  aud3t:"Mid-size firms & chains",aud3d:"Steady supply and tailored terms: a dedicated manager, priority handling, credit terms",
+  flex1l:"minimum order — no volume requirements",flex2l:"days — maximum credit terms for top-rated clients",
+  loy_t:"Loyalty programme",
+  loy_d:"The higher your rating, the better the terms: lower service fees, sharper purchase prices and credit terms up to 45 days.",
+  gal_l:"On the ground · Yiwu",
+  g1:"Yiwu International Trade City",g2:"Market stalls · District 1",
+  g3:"Trucks at customs · Khorgos",g4:"China–Kazakhstan border · Khorgos",
+  nav_track:"Tracking",track_label:"Tracking",
+  track_title:"Where is your cargo now?",
+  track_sub:"Enter the cargo number from your waybill to see live status along the Yiwu → Moscow route.",
+  track_ph:"Cargo no., e.g. OC-92841",track_btn:"Track",
+  track_err:"Enter your cargo number — it's on the waybill and in your manager's message.",
+  track_no_l:"Cargo",track_upd:"Updated",track_demo:"demo data · backend coming",
+  trk1:"Warehouse intake",trk2:"Packing at warehouse",trk3:"En route to CN–KZ border",trk4:"At CN–KZ border",
+  trk5:"Customs clearance",trk6:"Customs cleared",trk7:"En route to Moscow",trk8:"Arrived in Moscow",trk9:"Ready for pickup (onward delivery available)",
+  exc_ins:"Random inspection at the border — customs is checking the cargo; status updates on release.",
+  exc_jam:"Border congestion — the crossing is backed up and timing may slip; we're on it.",
+  foot_nav:"Navigation",foot_contact_l:"Contact",rights:"All rights reserved"
+}
+};
+
+var site = document.getElementById('site');
+var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var fine = window.matchMedia('(pointer: fine)').matches;
+
+function applyLang(lang){
+  var dict = I18N[lang] || I18N.en;
+  document.documentElement.lang = (lang === 'zh') ? 'zh-CN' : lang;
+  document.title = dict.title;
+  var els = document.querySelectorAll('[data-i18n]');
+  for (var i = 0; i < els.length; i++){
+    var k = els[i].getAttribute('data-i18n');
+    var t = dict[k];
+    if (t == null) continue;
+    if (t.indexOf('\n') > -1) els[i].style.whiteSpace = 'pre-line';
+    els[i].textContent = t;
+  }
+  var phs = document.querySelectorAll('[data-i18n-ph]');
+  for (var j = 0; j < phs.length; j++){
+    var pk = phs[j].getAttribute('data-i18n-ph');
+    if (dict[pk] != null) phs[j].setAttribute('placeholder', dict[pk]);
+  }
+  var bs = document.querySelectorAll('[data-lang]');
+  for (var b = 0; b < bs.length; b++){
+    bs[b].classList.toggle('act', bs[b].getAttribute('data-lang') === lang);
+  }
+  if (window.__trackRefresh) window.__trackRefresh();
+}
+
+var current = 'ru';
+applyLang(current);
+
+function setLang(lang){
+  if (lang === current){ applyLang(lang); return; }
+  current = lang;
+  if (reduced){ applyLang(lang); return; }
+  site.classList.add('xfade');
+  setTimeout(function(){
+    applyLang(lang);
+    site.classList.remove('xfade');
+  }, 280);
+}
+
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-lang]');
+  if (b) setLang(b.getAttribute('data-lang'));
+});
+
+/* ---------- WebGL liquid-metal fluid ---------- */
+var VERT = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+var FRAG = [
+'precision highp float;',
+'uniform vec2 R;uniform float T;uniform vec2 M;uniform float I;',
+'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}',
+'float n2(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);',
+'return mix(mix(h(i),h(i+vec2(1.,0.)),u.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),u.x),u.y);}',
+'float fbm(vec2 p){float v=0.,a=.5;mat2 m=mat2(1.6,1.2,-1.2,1.6);',
+'for(int i=0;i<4;i++){v+=a*n2(p);p=m*p;a*=.55;}return v;}',
+'float fld(vec2 p,float t){',
+'vec2 q=vec2(fbm(p+vec2(0.,.3)+t*.10),fbm(p+vec2(5.2,1.3)-t*.08));',
+'vec2 r=vec2(fbm(p+2.2*q+vec2(1.7,9.2)+t*.12),fbm(p+2.2*q+vec2(8.3,2.8)-t*.07));',
+'return fbm(p+1.8*r);}',
+'void main(){',
+'vec2 uv=gl_FragCoord.xy/R;',
+'float mn=min(R.x,R.y);',
+'vec2 p=(gl_FragCoord.xy-.5*R)/mn*1.3;',
+'vec2 mp=(M*R-.5*R)/mn*1.3;',
+'float md=length(p-mp);',
+'p+=.3*I*exp(-md*md*1.4)*(p-mp);',
+'float t=T*.11;',
+'float v=fld(p,t);',
+'float e=.012;',
+'float vx=fld(p+vec2(e,0.),t)-fld(p-vec2(e,0.),t);',
+'float vy=fld(p+vec2(0.,e),t)-fld(p-vec2(0.,e),t);',
+'vec3 N=normalize(vec3(-vx,-vy,2.2*e));',
+'vec3 L=normalize(vec3(.45,.55,.7));',
+'float dif=clamp(dot(N,L),0.,1.);',
+'float spe=pow(clamp(dot(reflect(-L,N),vec3(0.,0.,1.)),0.,1.),84.);',
+'vec3 pap=vec3(.985,.958,.900);',
+'vec3 hon=vec3(.96,.84,.60);',
+'vec3 amb=vec3(.94,.66,.23);',
+'vec3 sky=vec3(.74,.81,.84);',
+'float m1=smoothstep(.34,.82,v);',
+'float m2=smoothstep(.28,.74,fld(p+vec2(3.1,-1.7),t*.85));',
+'vec3 col=pap;',
+'col=mix(col,sky,m2*.28);',
+'col=mix(col,hon,m1*.85);',
+'col=mix(col,amb,smoothstep(.58,.93,v)*.6);',
+'float pool=smoothstep(.16,.68,v);',
+'col*=.93+.07*pool;',
+'col+=col*dif*.08;',
+'col+=vec3(1.,.97,.9)*spe*.4;',
+'col-=vec3(.06,.06,.05)*(1.-pool)*.3;',
+'vec2 q2=uv-.5;',
+'col*=1.-dot(q2,q2)*.12;',
+'gl_FragColor=vec4(col,1.);}'
+].join('\n');
+
+function fluid(id, o){
+  var c = document.getElementById(id);
+  if (!c) return null;
+  var gl = c.getContext('webgl', {antialias:false, alpha:false}) ||
+           c.getContext('experimental-webgl', {antialias:false, alpha:false});
+  if (!gl) return null;
+
+  function sh(type, src){
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) return null;
+    return s;
+  }
+  var vs = sh(gl.VERTEX_SHADER, VERT);
+  var fs = sh(gl.FRAGMENT_SHADER, FRAG);
+  if (!vs || !fs) return null;
+  var pr = gl.createProgram();
+  gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return null;
+  gl.useProgram(pr);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(pr, 'p');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+  var uR = gl.getUniformLocation(pr, 'R');
+  var uT = gl.getUniformLocation(pr, 'T');
+  var uM = gl.getUniformLocation(pr, 'M');
+  var uI = gl.getUniformLocation(pr, 'I');
+
+  var mx = .5, my = .5, tx = .5, ty = .5;
+  var visible = false, raf = 0, t0 = performance.now();
+
+  function size(){
+    var r = c.getBoundingClientRect();
+    var d = Math.min(window.devicePixelRatio || 1, 1.25) * o.res;
+    var w = Math.max(1, Math.round(r.width * d));
+    var hh = Math.max(1, Math.round(r.height * d));
+    if (c.width !== w || c.height !== hh){
+      c.width = w; c.height = hh;
+      gl.viewport(0, 0, w, hh);
+    }
+  }
+  function paint(tSec){
+    gl.uniform2f(uR, c.width, c.height);
+    gl.uniform1f(uT, tSec);
+    gl.uniform2f(uM, mx, my);
+    gl.uniform1f(uI, o.intensity);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+  function frame(now){
+    raf = 0;
+    size();
+    mx += (tx - mx) * .16;
+    my += (ty - my) * .16;
+    paint((now - t0) / 1000 * o.speed);
+    if (!reduced && visible && !document.hidden) raf = requestAnimationFrame(frame);
+  }
+  function still(){ size(); mx = .5; my = .5; paint(7.3); }
+
+  var host = c.parentElement || c;
+  host.addEventListener('pointermove', function(e){
+    var r = c.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    tx = (e.clientX - r.left) / r.width;
+    ty = 1 - (e.clientY - r.top) / r.height;
+  });
+
+  if (reduced){
+    still();
+    window.addEventListener('resize', still);
+  } else {
+    var io = new IntersectionObserver(function(en){
+      visible = en[0].isIntersecting;
+      if (visible && !raf && !document.hidden) raf = requestAnimationFrame(frame);
+    }, {threshold: 0});
+    io.observe(c);
+    document.addEventListener('visibilitychange', function(){
+      if (!document.hidden && visible && !raf) raf = requestAnimationFrame(frame);
+    });
+    window.addEventListener('resize', size);
+  }
+  return {};
+}
+
+if (!fluid('fluid', {speed: .7, intensity: .7, res: .5})){
+  var hero = document.querySelector('.hero');
+  if (hero) hero.classList.add('dead');
+}
+fluid('fluid2', {speed: .45, intensity: .45, res: .45});
+
+/* ---------- reveal on scroll ---------- */
+var rio = new IntersectionObserver(function(es){
+  for (var i = 0; i < es.length; i++){
+    if (es[i].isIntersecting){
+      es[i].target.classList.add('in');
+      rio.unobserve(es[i].target);
+    }
+  }
+}, {threshold: .15});
+var revs = document.querySelectorAll('.reveal');
+for (var ri = 0; ri < revs.length; ri++) rio.observe(revs[ri]);
+
+/* ---------- counters ---------- */
+function runCount(el){
+  var target = parseFloat(el.getAttribute('data-target'));
+  if (isNaN(target)) return;
+  var pre = el.getAttribute('data-prefix') || '';
+  var suf = el.getAttribute('data-suffix') || '';
+  if (reduced){ el.textContent = pre + target + suf; return; }
+  var start = performance.now(), dur = 1600;
+  function tick(now){
+    var k = Math.min(1, (now - start) / dur);
+    var ease = 1 - Math.pow(2, -10 * k);
+    el.textContent = pre + Math.round(target * ease) + suf;
+    if (k < 1) requestAnimationFrame(tick);
+    else el.textContent = pre + target + suf;
+  }
+  requestAnimationFrame(tick);
+}
+var cio = new IntersectionObserver(function(es){
+  for (var i = 0; i < es.length; i++){
+    if (es[i].isIntersecting){
+      runCount(es[i].target);
+      cio.unobserve(es[i].target);
+    }
+  }
+}, {threshold: .5});
+var nums = document.querySelectorAll('.num[data-target]');
+for (var ni = 0; ni < nums.length; ni++) cio.observe(nums[ni]);
+
+/* ---------- magnetic buttons ---------- */
+if (fine && !reduced){
+  var mags = document.querySelectorAll('.magnetic');
+  for (var mi = 0; mi < mags.length; mi++){
+    (function(b){
+      b.addEventListener('pointermove', function(e){
+        var r = b.getBoundingClientRect();
+        var dx = (e.clientX - r.left) / r.width - .5;
+        var dy = (e.clientY - r.top) / r.height - .5;
+        b.style.transform = 'translate(' + (dx * 10).toFixed(1) + 'px,' + (dy * 8).toFixed(1) + 'px)';
+      });
+      b.addEventListener('pointerleave', function(){ b.style.transform = ''; });
+    })(mags[mi]);
+  }
+}
+
+/* ---------- custom cursor ---------- */
+if (fine && !reduced){
+  var ring = document.getElementById('cring');
+  if (ring){
+    document.body.classList.add('cur-on');
+    var cx = -100, cy = -100, rx = -100, ry = -100;
+    document.addEventListener('pointermove', function(e){ cx = e.clientX; cy = e.clientY; }, {passive:true});
+    document.addEventListener('pointerover', function(e){
+      var on = e.target.closest && e.target.closest('a, button, .srow, .pcard, input, textarea');
+      ring.classList.toggle('on', !!on);
+    });
+    (function loop(){
+      rx += (cx - rx) * .4;
+      ry += (cy - ry) * .4;
+      ring.style.transform = 'translate(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px)';
+      requestAnimationFrame(loop);
+    })();
+  }
+}
+
+
+/* ---------- cargo tracking ----------
+   Backend contract: задайте window.OPENCHINA_TRACK_ENDPOINT = 'https://api.your-domain.com/track'
+   GET {endpoint}?no=<номер> → JSON:
+   { "no":"OC-92841", "status":5, "exception":null|"inspection"|"congestion",
+     "updated":"2026-06-12 14:30" }
+   status: 1..9 (labels trk1..trk9, задаются вручную на бэкенде).
+   Пока эндпоинт не задан — работает детерминированный демо-режим. */
+var trackForm = document.getElementById('track-form');
+if (trackForm){
+  var trackLast = null;
+  var trkInput = document.getElementById('track-no');
+  var trkErr = document.getElementById('track-err');
+  var trkRes = document.getElementById('tr-res');
+  var demoLookup = function(no){
+    var h = 0;
+    for (var i = 0; i < no.length; i++){ h = (h * 31 + no.charCodeAt(i)) >>> 0; }
+    var status = 1 + h % 9;
+    var exc = null;
+    if (status >= 3 && status <= 5){
+      var e = h % 7;
+      if (e === 3) exc = 'inspection';
+      else if (e === 5) exc = 'congestion';
+    }
+    var d = new Date(Date.now() - (h % 20 + 2) * 3600000);
+    var pad = function(n){ return (n < 10 ? '0' : '') + n; };
+    var upd = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    return { no: no, status: status, exception: exc, updated: upd, demo: true };
+  };
+  var renderTrack = function(data){
+    trackLast = data;
+    var L = I18N[current] || I18N.ru;
+    document.getElementById('tr-no').textContent = data.no;
+    document.getElementById('tr-chip').textContent = L['trk' + data.status] || '—';
+    var exc = document.getElementById('tr-exc');
+    if (data.exception){
+      exc.hidden = false;
+      document.getElementById('tr-exc-t').textContent = data.exception === 'inspection' ? L.exc_ins : L.exc_jam;
+    } else { exc.hidden = true; }
+    var ol = document.getElementById('tr-steps');
+    ol.innerHTML = '';
+    for (var i = 1; i <= 9; i++){
+      var li = document.createElement('li');
+      li.className = 'tstep' + (i < data.status ? ' done' : (i === data.status ? ' cur' : ''));
+      var dot = document.createElement('i'); dot.className = 'tdot';
+      var sp = document.createElement('span'); sp.textContent = L['trk' + i] || '';
+      li.appendChild(dot); li.appendChild(sp);
+      ol.appendChild(li);
+    }
+    document.getElementById('tr-upd').textContent = data.updated || '—';
+    document.getElementById('tr-demo').hidden = !data.demo;
+    trkRes.hidden = false;
+  };
+  window.__trackRefresh = function(){ if (trackLast) renderTrack(trackLast); };
+  trackForm.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var no = (trkInput.value || '').trim();
+    if (!no){ trkErr.classList.add('show'); trkRes.hidden = true; return; }
+    trkErr.classList.remove('show');
+    var ep = window.OPENCHINA_TRACK_ENDPOINT;
+    if (ep){
+      fetch(ep + '?no=' + encodeURIComponent(no))
+        .then(function(r){ if (!r.ok) throw 0; return r.json(); })
+        .then(function(j){ j.demo = false; renderTrack(j); })
+        .catch(function(){ renderTrack(demoLookup(no)); });
+    } else {
+      renderTrack(demoLookup(no));
+    }
+  });
+}
+
+/* ---------- nav show / hide ---------- */
+var nav = document.getElementById('nav');
+var lastY = 0;
+window.addEventListener('scroll', function(){
+  var y = window.scrollY || 0;
+  nav.classList.toggle('scrolled', y > 40);
+  if (document.body.classList.contains('menu-open')){ lastY = y; return; }
+  if (y > 500 && y > lastY + 4) nav.classList.add('hide');
+  else if (y < lastY - 4 || y <= 500) nav.classList.remove('hide');
+  lastY = y;
+}, {passive: true});
+
+/* ---------- overlay menu ---------- */
+var menuBtn = document.getElementById('menu-btn');
+var overlay = document.getElementById('overlay');
+function closeMenu(){
+  document.body.classList.remove('menu-open');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+menuBtn.addEventListener('click', function(){
+  var open = document.body.classList.toggle('menu-open');
+  overlay.setAttribute('aria-hidden', open ? 'false' : 'true');
+});
+var ovLinks = overlay.querySelectorAll('a');
+for (var oi = 0; oi < ovLinks.length; oi++) ovLinks[oi].addEventListener('click', closeMenu);
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeMenu();
+});
+
+/* ---------- smooth anchors ---------- */
+if (!reduced) document.documentElement.style.scrollBehavior = 'smooth';
+
+/* ---------- inquiry form ---------- */
+var form = document.getElementById('form');
+if (form){
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = form.querySelector('#f-name').value.trim();
+    var contact = form.querySelector('#f-contact').value.trim();
+    var msg = form.querySelector('#f-msg').value.trim();
+    var err = form.querySelector('.f-err');
+    if (!name || !contact || !msg){
+      err.classList.add('show');
+      return;
+    }
+    err.classList.remove('show');
+    console.log('[OpenChina inquiry]', {name: name, contact: contact, msg: msg, lang: current});
+    form.parentElement.classList.add('sent');
+  });
+}
+
+/* ---------- entrance ---------- */
+function loaded(){
+  if (!document.body.classList.contains('loaded')){
+    document.body.classList.add('loaded');
+  }
+}
+window.addEventListener('load', function(){ setTimeout(loaded, 80); });
+setTimeout(loaded, 900);
+
+})();
+</script>
+</body>
+</html>
